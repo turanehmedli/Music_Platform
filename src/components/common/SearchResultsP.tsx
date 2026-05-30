@@ -39,7 +39,7 @@ const SearchResultsP = () => {
     <div className="w-full min-h-screen flex flex-col">
 
       {/* Top bar */}
-      <div className="flex items-center mt-10 gap-3 px-4 py-3 sticky top-0 z-10">
+      <div className="flex items-center sm:mt-10 gap-3 px-4 py-3 sticky top-0 z-10">
         <ArrowLeft
           className="cursor-pointer shrink-0"
           onClick={() => navigate(-1)}

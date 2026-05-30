@@ -15,6 +15,7 @@ import SearchResultsP from "./components/common/SearchResultsP";
 import UserProfileP from "./components/home/UserProfileP";
 import PageNotFound from "./components/common/PageNotFound";
 import { useAuthStore } from "./stores/useAuthStore";
+import TabBar from "./components/layout/TabBar";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { accessToken, hasHydrated } = useAuthStore();
@@ -29,7 +30,7 @@ const App = () => {
 
   return (
     <div
-      className={`w-full min-h-screen h-fit flex flex-col justify-center relative items-center ease-in-out duration-200 xl:pl-60 overflow-hidden ${
+      className={`w-full min-h-screen h-fit flex flex-col justify-center relative items-center ease-in-out duration-200 xl:pl-60 pb-15 sm:pb-0 overflow-hidden ${
         isDarkModeOn
           ? "bg-slate-900 text-amber-50"
           : "bg-gray-100 text-shadow-amber-50"
@@ -40,6 +41,10 @@ const App = () => {
       </div>
       <div className="w-full flex xl:hidden">
         <NavBar />
+      </div>
+
+      <div className="w-full  flex sm:hidden">
+        <TabBar/>
       </div>
 
       <Routes>
