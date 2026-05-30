@@ -110,7 +110,7 @@ const MusicDetails = () => {
     track.artwork?.["150x150"];
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full min-h-screen flex flex-col">
       {/*Mobile*/}
       <div className="flex flex-col lg:hidden">
         <div className="relative w-full h-[50vh] overflow-hidden">
