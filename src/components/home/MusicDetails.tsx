@@ -110,10 +110,10 @@ const MusicDetails = () => {
     track.artwork?.["150x150"];
 
   return (
-    <div className="w-full h-140 flex flex-col">
+    <div className="w-full flex flex-col">
       {/*Mobile*/}
       <div className="flex flex-col lg:hidden">
-        <div className="relative w-full sm:h-[50vh] h-[30vh] overflow-hidden">
+        <div className="relative w-full h-[50vh] overflow-hidden">
           <img
             src={artwork}
             alt=""
@@ -141,7 +141,7 @@ const MusicDetails = () => {
           {/* Title + fav */}
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1 flex-1 mr-4">
-              <h1 className="sm:text-2xl text-sm font-black truncate">{track.title}</h1>
+              <h1 className="sm:text-2xl text-md font-black truncate">{track.title}</h1>
               <button
                 className="text-gray-500 text-sm text-left hover:underline flex items-center gap-3 mt-3"
                 onClick={() => {
@@ -159,9 +159,9 @@ const MusicDetails = () => {
           </div>
 
           <div className="flex gap-5 items-center">
-            <div className=" w-full  flex items-center gap-5">
+            <div className="flex items-center gap-5">
               
-              <div className="w-60">
+              <div>
                 <input
                   type="range"
                   min={0}
@@ -178,7 +178,7 @@ const MusicDetails = () => {
 
               <button onClick={() => toggleFavorite(track)}>
                 <Heart
-                  className={`size-7 transition-colors ${liked ? "fill-red-500 text-red-500" : "text-gray-400"}`}
+                  className={`size-9 transition-colors ${liked ? "fill-red-500 text-red-500" : "text-gray-400"}`}
                 />
               </button>
             </div>
@@ -186,19 +186,19 @@ const MusicDetails = () => {
             <div className="flex items-center justify-center gap-8">
               <button
                 onClick={handleReplay}
-                className="size-7 flex items-center justify-center rounded-full border border-gray-400 cursor-pointer"
+                className="size-9 flex items-center justify-center rounded-full border border-gray-400 cursor-pointer"
               >
-                <RotateCcw className="size-5 text-gray-600" />
+                <RotateCcw className="size-7 text-gray-600" />
               </button>
 
               <button
                 onClick={handlePlayPause}
-                className="size-7 rounded-full bg-black border flex items-center justify-center shadow-lg cursor-pointer"
+                className="size-9 rounded-full bg-black border flex items-center justify-center shadow-lg cursor-pointer"
               >
                 {playing ? (
-                  <Pause className="size-5 text-white" />
+                  <Pause className="size-7 text-white" />
                 ) : (
-                  <Play className="size-5 text-white ml-1" />
+                  <Play className="size-7  text-white ml-1" />
                 )}
               </button>
 
