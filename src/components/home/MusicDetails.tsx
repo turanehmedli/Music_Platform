@@ -113,7 +113,7 @@ const MusicDetails = () => {
     <div className="w-full min-h-screen flex flex-col">
       {/*Mobile*/}
       <div className="flex flex-col lg:hidden">
-        <div className="relative w-full h-[50vh] overflow-hidden">
+        <div className="relative w-full sm:h-[50vh] h-[30vh] overflow-hidden">
           <img
             src={artwork}
             alt=""

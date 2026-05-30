@@ -1,41 +1,46 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
 import { Camera, Check, Edit, X } from "lucide-react";
+import { useFollowing } from "../hooks/useFollowing";
 
 const Profile = () => {
   const { user, updateUser, localAvatar, updateAvatarProfile } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
+  const {following} = useFollowing()
   const [form, setForm] = useState({
     name: user?.name || "",
     handle: user?.handle || "",
     bio: user?.bio || "",
   });
 
-  const avatarSrc = localAvatar || user?.profile_picture?.["480x480"]||`https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png`;
+  const avatarSrc =
+    localAvatar ||
+    user?.profile_picture?.["480x480"] ||
+    `https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png`;
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      updateAvatarProfile( reader.result as any );
+      updateAvatarProfile(reader.result as any);
     };
     reader.readAsDataURL(file);
   };
 
-  const handleSave = ()=>{
-    updateUser(form)
-    setIsEditing(false)
-  }
+  const handleSave = () => {
+    updateUser(form);
+    setIsEditing(false);
+  };
 
-  const handleCancel =()=>{
+  const handleCancel = () => {
     setForm({
-      name:user?.name || "",
-      handle:user?.handle || "",
-      bio:user?.bio || "",
+      name: user?.name || "",
+      handle: user?.handle || "",
+      bio: user?.bio || "",
     });
-    setIsEditing(false)
-  }
+    setIsEditing(false);
+  };
 
   if (!user) return null;
 
@@ -62,8 +67,10 @@ const Profile = () => {
 
         {!isEditing ? (
           <div className="text-center">
-            <h1 className="text-2xl font-bold">{user.name}</h1>
-            <p className="text-zinc-400 text-sm">@{user.handle}</p>
+            <h1 className="text-2xl font-bold">{user.name || "User test"}</h1>
+            <p className="text-zinc-400 text-sm">
+              @{user.handle || "user Name"}
+            </p>
             <p className="text-zinc-400 text-sm">{user.bio || ""}</p>
           </div>
         ) : (
@@ -96,39 +103,45 @@ const Profile = () => {
         {/*Edit/Save/Cancel buttons */}
 
         <div className="flex gap-2">
-          {!isEditing?(
-            <button onClick={()=> setIsEditing(true)} className="flex col-end-1 items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-500 text-sm font-medium transition-colors text-white">
-              <Edit className="size-4"/>
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="flex col-end-1 items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-500 text-sm font-medium transition-colors text-white"
+            >
+              <Edit className="size-4" />
               Edit Profile
             </button>
-          ):(
+          ) : (
             <>
-              <button onClick={handleSave} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-sm font-medium transition-colors">
-                <Check className="size-4"/>
+              <button
+                onClick={handleSave}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-sm font-medium transition-colors"
+              >
+                <Check className="size-4" />
                 Save
               </button>
-              <button onClick={handleCancel} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-sm font-medium transition-colors">
-                <X className="size-4"/>
+              <button
+                onClick={handleCancel}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-sm font-medium transition-colors"
+              >
+                <X className="size-4" />
                 Cancel
               </button>
             </>
-          )
-          }
+          )}
         </div>
       </div>
 
       {/*Follower / Follow */}
       <div className="flex justify-center gap-12 py-4 border-y border-zinc-600">
-          <div className="flex flex-col items-center gap-1">
-            
-            <span className="text-xl font-bold">{user?.follower_count}</span>
-            <span className="text-xs text-zinc-400">Following</span>
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            
-            <span className="text-xl font-bold">{user?.followee_count}</span>
-            <span className="text-xs text-zinc-400">Following</span>
-          </div>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-xl font-bold">{user?.follower_count ?? 0}</span>
+          <span className="text-xs text-zinc-400">Followers</span>
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-xl font-bold">{following.length}</span>
+          <span className="text-xs text-zinc-400">Following</span>
+        </div>
       </div>
     </div>
   );

@@ -91,7 +91,7 @@ const Discover = () => {
   return (
     <div className="w-full  flex flex-col  p-3 justify-center ">
       <div className="w-full p-3 flex flex-col gap-2">
-        <h2 className="text-4xl font-black">Trending</h2>
+        <h2 className="md:text-4xl sm:2xl text-xl font-black">Trending</h2>
         <div
           ref={TrendRef}
           className="flex
@@ -126,7 +126,7 @@ const Discover = () => {
       </div>
 
       <div className="w-full p-3 flex flex-col gap-2">
-        <h2 className="text-4xl font-black">Pop</h2>
+        <h2 className="md:text-4xl sm:2xl text-xl font-black">Pop</h2>
         <div
           ref={PopRef}
           className="flex
@@ -161,7 +161,7 @@ const Discover = () => {
       </div>
 
        <div className="w-full p-3 flex flex-col gap-2">
-        <h2 className="text-4xl font-black">Rock</h2>
+        <h2 className="md:text-4xl sm:2xl text-xl font-black">Rock</h2>
         <div
           ref={RockRef}
           className="flex

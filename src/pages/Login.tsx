@@ -5,20 +5,16 @@ import { useAuthStore } from "../stores/useAuthStore";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setAccessToken, setRefreshToken } = useAuthStore();
+  const { setAccessToken, setRefreshToken, setUser } = useAuthStore();
   const form = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("User input:", value);
-
       const res = await fetch("https://dummyjson.com/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: "emilys",
           password: "emilyspass",
@@ -27,10 +23,21 @@ const Login = () => {
 
       const data = await res.json();
       console.log("API response:", data);
+
       if (data.accessToken) {
-        setAccessToken(data.accessToken); // ✅ store'a yaz
-        setRefreshToken(data.refreshToken); // ✅ store'a yaz
-        navigate("/"); // ✅ sonra yönlendir
+        setAccessToken(data.accessToken);
+        setRefreshToken(data.refreshToken);
+
+        const emailBase = value.email?.split("@")[0] || "user";
+        setUser({
+          ...data,
+          name: data.name || "User",
+          handle: data.handle || data.username || emailBase,
+          bio: data.bio || "",
+          
+        });
+
+        navigate("/");
       }
     },
   });
