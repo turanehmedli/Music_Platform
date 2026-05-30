@@ -6,6 +6,7 @@ interface tokenAll {
   accessToken: string;
   refreshToken: string;
   hasHydrated: boolean;
+  localAvatar: string;
   user: AudiusUser | null;
 
   email: string;
@@ -16,6 +17,7 @@ interface tokenAll {
   setHasHydrated: (state: boolean) => void;
   setUser: (user: AudiusUser) => void;
   updateUser: (fields: Partial<AudiusUser>) => void;
+  updateAvatarProfile: (avatar:string) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   clearToken: () => void;
@@ -26,6 +28,7 @@ export const useAuthStore = create<tokenAll>()(
     (set) => ({
       accessToken: "",
       refreshToken: "",
+      localAvatar: "",
       hasHydrated: false,
       user: null,
       email: "",
@@ -34,6 +37,7 @@ export const useAuthStore = create<tokenAll>()(
       setAccessToken: (token) => set({ accessToken: token }),
       setRefreshToken: (token) => set({ refreshToken: token }),
       setHasHydrated: (state) => set({ hasHydrated: state }),
+      updateAvatarProfile: (avatar) =>set({localAvatar: avatar}),
       setUser: (user) => set({ user }),
       updateUser: (fields) =>
         set((state) => ({

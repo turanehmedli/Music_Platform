@@ -3,7 +3,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 import { Camera, Check, Edit, X } from "lucide-react";
 
 const Profile = () => {
-  const { user, updateUser } = useAuthStore();
+  const { user, updateUser, localAvatar, updateAvatarProfile } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
     name: user?.name || "",
@@ -11,12 +11,14 @@ const Profile = () => {
     bio: user?.bio || "",
   });
 
+  const avatarSrc = localAvatar || user?.profile_picture?.["480x480"]||`https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png`;
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      updateUser({ profile_picture: reader.result as any });
+      updateAvatarProfile( reader.result as any );
     };
     reader.readAsDataURL(file);
   };
@@ -43,10 +45,7 @@ const Profile = () => {
       <div className="flex flex-col items-center gap-4">
         <div className="relative">
           <img
-            src={
-              user.profile_picture?.["150x150"] ||
-              `https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png`
-            }
+            src={avatarSrc}
             alt="avatar"
             className="size-24 rounded-full object-cover border-4 border-sky-900"
           />
@@ -98,7 +97,7 @@ const Profile = () => {
 
         <div className="flex gap-2">
           {!isEditing?(
-            <button onClick={()=> setIsEditing(true)} className="flex col-end-1 items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-500 text-sm font-medium transition-colors">
+            <button onClick={()=> setIsEditing(true)} className="flex col-end-1 items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-500 text-sm font-medium transition-colors text-white">
               <Edit className="size-4"/>
               Edit Profile
             </button>
