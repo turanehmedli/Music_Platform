@@ -110,10 +110,10 @@ const MusicDetails = () => {
     track.artwork?.["150x150"];
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
+    <div className="w-full h-140 flex flex-col">
       {/*Mobile*/}
       <div className="flex flex-col lg:hidden">
-        <div className="relative w-full h-[50vh] overflow-hidden">
+        <div className="relative w-full sm:h-[50vh] h-[30vh] overflow-hidden">
           <img
             src={artwork}
             alt=""
@@ -132,7 +132,7 @@ const MusicDetails = () => {
             <img
               src={artwork}
               alt=""
-              className="w-52 h-52 object-cover rounded-2xl shadow-2xl"
+              className="w-32 h-32 object-cover rounded-2xl shadow-2xl"
             />
           </div>
         </div>
@@ -141,7 +141,7 @@ const MusicDetails = () => {
           {/* Title + fav */}
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1 flex-1 mr-4">
-              <h1 className="text-2xl font-black truncate">{track.title}</h1>
+              <h1 className="sm:text-2xl text-sm font-black truncate">{track.title}</h1>
               <button
                 className="text-gray-500 text-sm text-left hover:underline flex items-center gap-3 mt-3"
                 onClick={() => {
@@ -159,13 +159,9 @@ const MusicDetails = () => {
           </div>
 
           <div className="flex gap-5 items-center">
-            <div className="flex items-center gap-5">
-              <button onClick={() => toggleFavorite(track)}>
-                <Heart
-                  className={`size-10 transition-colors ${liked ? "fill-red-500 text-red-500" : "text-gray-400"}`}
-                />
-              </button>
-              <div>
+            <div className=" w-full  flex items-center gap-5">
+              
+              <div className="w-60">
                 <input
                   type="range"
                   min={0}
@@ -179,42 +175,37 @@ const MusicDetails = () => {
                   <span>{formatTime(duration)}</span>
                 </div>
               </div>
+
+              <button onClick={() => toggleFavorite(track)}>
+                <Heart
+                  className={`size-7 transition-colors ${liked ? "fill-red-500 text-red-500" : "text-gray-400"}`}
+                />
+              </button>
             </div>
 
             <div className="flex items-center justify-center gap-8">
               <button
                 onClick={handleReplay}
-                className="size-13 flex items-center justify-center rounded-full border border-gray-200 cursor-pointer"
+                className="size-7 flex items-center justify-center rounded-full border border-gray-400 cursor-pointer"
               >
-                <RotateCcw className="size-7 text-gray-600" />
+                <RotateCcw className="size-5 text-gray-600" />
               </button>
 
               <button
                 onClick={handlePlayPause}
-                className="size-13 rounded-full bg-black border flex items-center justify-center shadow-lg cursor-pointer"
+                className="size-7 rounded-full bg-black border flex items-center justify-center shadow-lg cursor-pointer"
               >
                 {playing ? (
-                  <Pause className="size-7 text-white" />
+                  <Pause className="size-5 text-white" />
                 ) : (
-                  <Play className="size-7 text-white ml-1" />
+                  <Play className="size-5 text-white ml-1" />
                 )}
               </button>
 
-              <button
-                className="cursor-pointer"
-                onClick={() => {
-                  const userId = (track.user as { id?: string })?.id;
-                  if (userId) navigate(`/user/${userId}`);
-                }}
-              >
-                <img
-                  className="size-13 cursor-pointer rounded-full object-cover"
-                  src={(track.user as any)?.profile_picture?.["150x150"]}
-                  alt=""
-                />
-              </button>
+              
             </div>
           </div>
+          
         </div>
       </div>
 

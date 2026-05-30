@@ -32,7 +32,7 @@ const NavBar = () => {
   }, []);
 
   return (
-    <div className="w-full h-20 border-b flex justify-between items-center p-2">
+    <div className="w-full sm:h-20 border-b flex justify-between items-center p-2">
       <p className="sm:text-3xl text-xl my-3 font-bold">Music App</p>
 
       <div className="gap-4 sm:flex hidden">

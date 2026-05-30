@@ -30,7 +30,7 @@ const CartTrending = ({ item }: CartTrendingProps) => {
       />
 
       <div className="flex w-full flex-col gap-2 py-2">
-        <h3 className="text-xl font-semibold truncate">{item.title}</h3>
+        <h3 className="sm:text-xl text-xs font-semibold truncate">{item.title}</h3>
         <p>{item.user?.name}</p>
         <Heart
           className={`lg:size-9 cursor-pointer transition-colors ${
