@@ -1,8 +1,8 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import type { AudiusUser } from "../../types/users";
 import type { Track } from "../../types/track";
-import { useFollowing } from "../../hooks/useFollowing";
+import { useFollowing } from "../../stores/useFollowing";
 import api from "../../api/axios";
 import { ArrowLeft, Music } from "lucide-react";
 import CartTrending from "./CartTrending";
@@ -92,21 +92,29 @@ const UserProfileP = () => {
       <div className="px-6 lg:px-16">
         {/* Avatar + follow row */}
         <div className="flex items-center justify-between mt-6  mb-4">
-          <img src={
-            user.profile_picture?.["480x480"] ||
-            user.profile_picture?.["150x150"]
-          }
-          className="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-white shadow-lg" alt="" />
+          <img
+            src={
+              user.profile_picture?.["480x480"] ||
+              user.profile_picture?.["150x150"]
+            }
+            className="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-white shadow-lg"
+            alt=""
+          />
 
-          <button onClick={handleFollow} className={`px-6 py-2 rounded-full cursor-pointer text-sm font-semibold transition mb-2 ${followed ? "bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-500 border border-gray-200":"bg-black text-white hover:bg-gray-800"} `}>
-            {followed ? 'Following':'Follow'}
+          <button
+            onClick={handleFollow}
+            className={`px-6 py-2 rounded-full cursor-pointer text-sm font-semibold transition mb-2 ${followed ? "bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-500 border border-gray-200" : "bg-black text-white hover:bg-gray-800"} `}
+          >
+            {followed ? "Following" : "Follow"}
           </button>
         </div>
 
         <div className="flex it text-sm mb-4ems-center gap-2 mb-1">
           <h2 className="text-2xl font-black">{user.name}</h2>
           {user.is_verified && (
-            <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">Verified</span>
+            <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">
+              Verified
+            </span>
           )}
         </div>
         <p className="text-gray-400">@{user.handle}</p>
@@ -148,9 +156,11 @@ const UserProfileP = () => {
               <Music className="size-10" />
               <p className="text-sm">No tracks yet</p>
             </div>
-          ):(
+          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {tracks.map((track)=> <CartTrending key={track.id} item={track}/>)}
+              {tracks.map((track) => (
+                <CartTrending key={track.id} item={track} />
+              ))}
             </div>
           )}
         </div>

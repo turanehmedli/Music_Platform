@@ -4,7 +4,7 @@ import api from "../../api/axios";
 import type { Track } from "../../types/track";
 import { ArrowLeft, Heart, Pause, Play, RotateCcw } from "lucide-react";
 import { useFavorites } from "../../stores/useFavSong";
-import { useLastPlayed } from "../../hooks/useLastPlayed";
+import { useLastPlayed } from "../../stores/useLastPlayed";
 
 const BASE_URL = "https://discoveryprovider.audius.co/v1";
 
@@ -16,7 +16,7 @@ const MusicDetails = () => {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const {setLastPlayed}=useLastPlayed()
+  const { setLastPlayed } = useLastPlayed();
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavorites();
 
@@ -141,7 +141,9 @@ const MusicDetails = () => {
           {/* Title + fav */}
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1 flex-1 mr-4">
-              <h1 className="sm:text-2xl text-md font-black truncate">{track.title}</h1>
+              <h1 className="sm:text-2xl text-md font-black truncate">
+                {track.title}
+              </h1>
               <button
                 className="text-gray-500 text-sm text-left hover:underline flex items-center gap-3 mt-3"
                 onClick={() => {
@@ -160,7 +162,6 @@ const MusicDetails = () => {
 
           <div className="flex gap-5 items-center">
             <div className="flex items-center gap-5">
-              
               <div>
                 <input
                   type="range"
@@ -201,11 +202,8 @@ const MusicDetails = () => {
                   <Play className="size-7  text-white ml-1" />
                 )}
               </button>
-
-              
             </div>
           </div>
-          
         </div>
       </div>
 
@@ -294,28 +292,32 @@ const MusicDetails = () => {
               onClick={handleReplay}
               className="p-3 rounded-full border border-gray-200 hover:bg-gray-50 transition"
             >
-              <RotateCcw className="size-5 text-gray-600"/>
+              <RotateCcw className="size-5 text-gray-600" />
             </button>
 
-            <button onClick={()=> toggleFavorite(track)}>
-              <Heart className={`size-10 transition-colors ${
-                  liked ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-gray-600"
-                }`}/>
+            <button onClick={() => toggleFavorite(track)}>
+              <Heart
+                className={`size-10 transition-colors ${
+                  liked
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
+              />
             </button>
 
             <button
-                className="cursor-pointer"
-                onClick={() => {
-                  const userId = (track.user as { id?: string })?.id;
-                  if (userId) navigate(`/user/${userId}`);
-                }}
-              >
-                <img
-                  className="size-13 cursor-pointer rounded-full object-cover"
-                  src={(track.user as any)?.profile_picture?.["150x150"]}
-                  alt=""
-                />
-              </button>
+              className="cursor-pointer"
+              onClick={() => {
+                const userId = (track.user as { id?: string })?.id;
+                if (userId) navigate(`/user/${userId}`);
+              }}
+            >
+              <img
+                className="size-13 cursor-pointer rounded-full object-cover"
+                src={(track.user as any)?.profile_picture?.["150x150"]}
+                alt=""
+              />
+            </button>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { Search, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useSearchHistory } from "../hooks/useSearchHistory";
+import { useSearchHistory } from "../stores/useSearchHistory";
 
 const SearchP = () => {
   const [query, setQuery] = useState("");
@@ -28,7 +28,7 @@ const SearchP = () => {
             }}
             onKeyDown={(e)=> e.key === "Enter"&&handleSearch()}
             className="border w-full h-12 rounded-xl absolute  px-4"
-            placeholder="Searching...."
+            placeholder="Search for music"
             type="text"
           />
 

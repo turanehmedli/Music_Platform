@@ -11,6 +11,11 @@ const NavBar = () => {
   const { isDarkModeOn, toggleDarkMode } = useTheme();
   const [active, setActive] = useState<boolean>(false);
   const { clearToken } = useAuthStore();
+  const {localAvatar, user} = useAuthStore()
+  const avatarSrc =
+    localAvatar ||
+    user?.profile_picture?.["480x480"] ||
+    `https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png`;
 
   useEffect(() => {
     setActive(false);
@@ -99,10 +104,10 @@ const NavBar = () => {
 
       {/* Desktop Dropdown */}
       <div ref={desktopDropdownRef} className="relative sm:flex hidden">
-        <button
-          onClick={() => setActive((prev) => !prev)}
-          className="border size-16 rounded-full flex items-center justify-center cursor-pointer bg-white"
-        />
+        <button onClick={() => setActive((prev) => !prev)}
+          className="border size-13 rounded-full flex items-center justify-center cursor-pointer">
+            <img className="rounded-full" src={avatarSrc} alt="" />
+        </button>
 
         <div
           className={`w-70 absolute z-20 rounded-lg right-0 top-16 p-1 flex flex-col gap-3 

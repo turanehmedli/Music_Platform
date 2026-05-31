@@ -112,13 +112,13 @@ const Discover = () => {
         <div className="flex w-full justify-between items-center border-b pb-3">
           <button
             onClick={leftSmooth}
-            className="my-3 border p-3 rounded-2xl shadow"
+            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
           >
             <ArrowLeft size={"30"} />
           </button>
           <button
             onClick={rightSmooth}
-            className="my-3 border p-3 rounded-2xl shadow"
+            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
           >
             <ArrowRight size={"30"} />
           </button>
@@ -147,13 +147,13 @@ const Discover = () => {
         <div className="flex w-full justify-between items-center border-b pb-3">
           <button
             onClick={leftPop}
-            className="my-3 border p-3 rounded-2xl shadow"
+            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
           >
             <ArrowLeft size={"30"} />
           </button>
           <button
             onClick={rightPop}
-            className="my-3 border p-3 rounded-2xl shadow"
+            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
           >
             <ArrowRight size={"30"} />
           </button>
@@ -182,13 +182,13 @@ const Discover = () => {
         <div className="flex w-full justify-between items-center border-b pb-3">
           <button
             onClick={leftRock}
-            className="my-3 border p-3 rounded-2xl shadow"
+            className="my-3 border lg:p-3 p-2  rounded-2xl shadow"
           >
             <ArrowLeft size={"30"} />
           </button>
           <button
             onClick={rightRock}
-            className="my-3 border p-3 rounded-2xl shadow"
+            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
           >
             <ArrowRight size={"30"} />
           </button>

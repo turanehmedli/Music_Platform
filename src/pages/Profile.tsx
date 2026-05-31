@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
 import { Camera, Check, Edit, X } from "lucide-react";
-import { useFollowing } from "../hooks/useFollowing";
+import { useFollowing } from "../stores/useFollowing";
 
 const Profile = () => {
   const { user, updateUser, localAvatar, updateAvatarProfile } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
-  const {following} = useFollowing()
+  const { following } = useFollowing();
   const [form, setForm] = useState({
     name: user?.name || "",
     handle: user?.handle || "",
