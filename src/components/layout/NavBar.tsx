@@ -10,10 +10,8 @@ const NavBar = () => {
   const desktopDropdownRef = useRef<HTMLDivElement>(null);
   const { isDarkModeOn, toggleDarkMode } = useTheme();
   const [active, setActive] = useState<boolean>(false);
-  const [visible, setVisible] = useState(true);
-  const lastScrollY = useRef(0);
   const { clearToken } = useAuthStore();
-  const { localAvatar, user } = useAuthStore();
+  const {localAvatar, user} = useAuthStore()
   const avatarSrc =
     localAvatar ||
     user?.profile_picture?.["480x480"] ||
@@ -38,29 +36,8 @@ const NavBar = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY < 10) {
-        setVisible(true);
-      } else if (currentY > lastScrollY.current) {
-        setVisible(false); // aşağı kaydır → gizle
-      } else {
-        setVisible(true); // yukarı kaydır → göster
-      }
-      lastScrollY.current = currentY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <div
-      className={`w-full sm:h-20 border-b flex justify-between items-center p-2 fixed top-0 left-0 right-0 z-40 xl:hidden transition-transform duration-300 ${
-        isDarkModeOn ? "bg-slate-900" : "bg-gray-100"
-      } ${visible ? "translate-y-0" : "-translate-y-full"}`}
-    >
+    <div className="w-full sm:h-20 border-b flex justify-between items-center p-2">
       <p className="sm:text-3xl text-xl my-3 font-bold">Music App</p>
 
       <div className="gap-4 sm:flex hidden">
@@ -95,6 +72,7 @@ const NavBar = () => {
         <button onClick={() => setActive((prev) => !prev)}>
           <Menu className="cursor-pointer" size={"30"} />
         </button>
+
         <div
           className={`w-70 absolute z-20 border rounded-lg -right-2 top-10 p-2 flex flex-col gap-3 
             ${active ? "flex" : "hidden"} 
@@ -106,12 +84,15 @@ const NavBar = () => {
           >
             Setting
           </NavLink>
+
           <NavLink
             to={"/favorite"}
             className="block p-3 border-b hover:bg-gray-400 border-zinc-500 text-lg text-start font-semibold transition-all duration-300 rounded-lg cursor-pointer"
           >
             Favorite
           </NavLink>
+
+          
           <button
             onClick={toggleDarkMode}
             className="w-full p-3 border-b hover:bg-gray-400 border-zinc-500 text-lg text-start font-semibold transition-all duration-300 rounded-lg cursor-pointer"
@@ -123,12 +104,11 @@ const NavBar = () => {
 
       {/* Desktop Dropdown */}
       <div ref={desktopDropdownRef} className="relative sm:flex hidden">
-        <button
-          onClick={() => setActive((prev) => !prev)}
-          className="border size-13 rounded-full flex items-center justify-center cursor-pointer"
-        >
-          <img className="rounded-full" src={avatarSrc} alt="" />
+        <button onClick={() => setActive((prev) => !prev)}
+          className="border size-13 rounded-full flex items-center justify-center cursor-pointer">
+            <img className="rounded-full" src={avatarSrc} alt="" />
         </button>
+
         <div
           className={`w-70 absolute z-20 rounded-lg right-0 top-16 p-1 flex flex-col gap-3 
             ${active ? "flex" : "hidden"} 

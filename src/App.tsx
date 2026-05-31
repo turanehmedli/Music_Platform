@@ -32,7 +32,7 @@ const App = () => {
 
   return (
     <div
-      className={`w-full min-h-screen h-fit flex flex-col justify-center relative items-center ease-in-out duration-200 xl:pl-60 sm:pb-10 pb-15 overflow-hidden ${
+      className={`w-full min-h-screen h-fit flex flex-col justify-center relative items-center ease-in-out duration-200 xl:pl-60 sm:pb-10 pb-15  overflow-hidden ${
         isDarkModeOn
           ? "bg-slate-900 text-amber-50"
           : "bg-gray-100 text-shadow-amber-50"
