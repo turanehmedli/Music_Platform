@@ -89,7 +89,7 @@ const Discover = () => {
 
 
   return (
-    <div className="w-full  flex flex-col  p-3 justify-center ">
+    <div className="w-full min-h-screen h-fit flex flex-col  p-3 justify-center ">
       <div className="w-full p-3 flex flex-col gap-2">
         <h2 className="md:text-4xl sm:2xl text-xl font-black">Trending</h2>
         <div

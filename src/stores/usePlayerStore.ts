@@ -25,14 +25,26 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   audio: null,
 
   play: (track) => {
-    const prev = get().audio;
+    const { audio: prev, track: currentTrack } = get();
+
+    // Aynı şarkıysa sadece baştan başlat, yeni Audio oluşturma
+    if (prev && currentTrack?.id === track.id) {
+      prev.currentTime = 0;
+      prev.play();
+      set({ playing: true, progress: 0 });
+      return;
+    }
+
+    // Farklı şarkıysa önce eskiyi tamamen durdur
     if (prev) {
       prev.pause();
+      prev.ontimeupdate = null;
+      prev.onloadedmetadata = null;
+      prev.onended = null;
       prev.src = "";
     }
 
     const audio = new Audio(`${BASE_URL}/tracks/${track.id}/stream`);
-
     audio.ontimeupdate = () => set({ progress: audio.currentTime });
     audio.onloadedmetadata = () => set({ duration: audio.duration });
     audio.onended = () => set({ playing: false });

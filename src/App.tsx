@@ -20,14 +20,15 @@ import MiniPlayer from "./components/home/MiniPlayer";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { accessToken, hasHydrated } = useAuthStore();
-  
-  if (!hasHydrated) return <div>Loading...</div>; 
+
+  if (!hasHydrated) return <div>Loading...</div>;
   if (!accessToken) return <Navigate to="/login" />;
   return <>{children}</>;
 };
 
 const App = () => {
   const { isDarkModeOn } = useTheme();
+  const { accessToken, hasHydrated } = useAuthStore();
 
   return (
     <div
@@ -37,16 +38,19 @@ const App = () => {
           : "bg-gray-100 text-shadow-amber-50"
       } select-none`}
     >
-      <div className="hidden xl:block fixed left-0 top-0 h-full w-[250px]">
-        <ProtectedRoute><DrawerBar/></ProtectedRoute>
-      </div>
-      <div className="w-full flex xl:hidden">
-         <ProtectedRoute><NavBar/></ProtectedRoute>
-      </div>
-
-      <div className="w-full  flex sm:hidden">
-        <ProtectedRoute><TabBar/></ProtectedRoute>
-      </div>
+      {accessToken && hasHydrated && (
+        <>
+          <div className="hidden xl:block fixed left-0 top-0 h-full w-[250px]">
+            <DrawerBar />
+          </div>
+          <div className="w-full flex xl:hidden">
+            <NavBar />
+          </div>
+          <div className="w-full flex sm:hidden">
+            <TabBar />
+          </div>
+        </>
+      )}
 
       <Routes>
         {/* Public routes */}
@@ -68,9 +72,11 @@ const App = () => {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
 
-      <div className="hidden sm:flex">
-        <ProtectedRoute><MiniPlayer/></ProtectedRoute>
-      </div>
+      {accessToken && hasHydrated && (
+        <div className="">
+          <MiniPlayer />
+        </div>
+      )}
     </div>
   );
 };
