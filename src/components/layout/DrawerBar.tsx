@@ -1,4 +1,4 @@
-import { Compass, Heart, Home, Search, User } from "lucide-react";
+import { Compass, Heart, Home, Search } from "lucide-react";
 import { NavLink } from "react-router";
 import { useTheme } from "../../stores/themeStores";
 import { useAuthStore } from "../../stores/useAuthStore";

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router"
 import { useTheme } from "../../stores/themeStores"
-import { Compass, Home, Search, User } from "lucide-react"
+import { Compass, Home, Search } from "lucide-react"
 import { useAuthStore } from "../../stores/useAuthStore"
 
 
