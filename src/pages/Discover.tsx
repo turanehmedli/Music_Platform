@@ -16,15 +16,15 @@ const Discover = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [trendsRes, popRes, rockRes ] = await Promise.all([
+        const [trendsRes, popRes, rockRes] = await Promise.all([
           getTrendingTracks(),
           getPopTracks(),
           getRockTracks(),
         ]);
-        
+
         setTrends(trendsRes);
         setPop(popRes);
-        setRock(rockRes)
+        setRock(rockRes);
       } catch (error) {
         console.error(error);
       }
@@ -69,7 +69,7 @@ const Discover = () => {
     }
   };
 
-   const leftRock = () => {
+  const leftRock = () => {
     if (RockRef.current) {
       RockRef.current.scrollBy({
         left: -400,
@@ -87,11 +87,27 @@ const Discover = () => {
     }
   };
 
-
   return (
     <div className="w-full min-h-screen h-fit flex flex-col  p-3 justify-center ">
-      <div className="w-full p-3 flex flex-col gap-2">
-        <h2 className="md:text-4xl sm:2xl text-xl font-black">Trending</h2>
+      <div className="w-full p-1 flex flex-col gap-2">
+        <div className="flex w-full justify-between items-center">
+          <h2 className="lg:text-4xl sm:2xl text-xl font-black">Trending</h2>
+
+          <div className="flex gap-5  items-center">
+            <button
+              onClick={leftSmooth}
+              className="cursor-pointer"
+            >
+              <ArrowLeft size={"30"} />
+            </button>
+            <button
+              onClick={rightSmooth}
+              className="cursor-pointer "
+            >
+              <ArrowRight size={"30"} />
+            </button>
+          </div>
+        </div>
         <div
           ref={TrendRef}
           className="flex
@@ -109,24 +125,27 @@ const Discover = () => {
             </div>
           ))}
         </div>
-        <div className="flex w-full justify-between items-center border-b pb-3">
-          <button
-            onClick={leftSmooth}
-            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
-          >
-            <ArrowLeft size={"30"} />
-          </button>
-          <button
-            onClick={rightSmooth}
-            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
-          >
-            <ArrowRight size={"30"} />
-          </button>
-        </div>
       </div>
 
-      <div className="w-full p-3 flex flex-col gap-2">
-        <h2 className="md:text-4xl sm:2xl text-xl font-black">Pop</h2>
+      <div className="w-full p-1 flex flex-col gap-2">
+        <div className="flex w-full justify-between items-center">
+          <h2 className="lg:text-4xl sm:2xl text-xl font-black">Pop</h2>
+
+          <div className="flex gap-5  items-center ">
+            <button
+              onClick={leftPop}
+              className="cursor-pointer"
+            >
+              <ArrowLeft size={"30"} />
+            </button>
+            <button
+              onClick={rightPop}
+              className="cursor-pointer "
+            >
+              <ArrowRight size={"30"} />
+            </button>
+          </div>
+        </div>
         <div
           ref={PopRef}
           className="flex
@@ -144,24 +163,28 @@ const Discover = () => {
             </div>
           ))}
         </div>
-        <div className="flex w-full justify-between items-center border-b pb-3">
-          <button
-            onClick={leftPop}
-            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
-          >
-            <ArrowLeft size={"30"} />
-          </button>
-          <button
-            onClick={rightPop}
-            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
-          >
-            <ArrowRight size={"30"} />
-          </button>
-        </div>
+        
       </div>
 
-       <div className="w-full p-3 flex flex-col gap-2">
-        <h2 className="md:text-4xl sm:2xl text-xl font-black">Rock</h2>
+      <div className="w-full p-1 flex flex-col gap-2">
+        <div className="flex w-full justify-between items-center">
+          <h2 className="lg:text-4xl sm:2xl text-xl font-black">Rock</h2>
+
+          <div className="flex gap-5  items-center pb-3">
+            <button
+              onClick={leftRock}
+              className="cursor-pointer"
+            >
+              <ArrowLeft size={"30"} />
+            </button>
+            <button
+              onClick={rightRock}
+              className="cursor-pointer "
+            >
+              <ArrowRight size={"30"} />
+            </button>
+          </div>
+        </div>
         <div
           ref={RockRef}
           className="flex
@@ -179,20 +202,7 @@ const Discover = () => {
             </div>
           ))}
         </div>
-        <div className="flex w-full justify-between items-center border-b pb-3">
-          <button
-            onClick={leftRock}
-            className="my-3 border lg:p-3 p-2  rounded-2xl shadow"
-          >
-            <ArrowLeft size={"30"} />
-          </button>
-          <button
-            onClick={rightRock}
-            className="my-3 border lg:p-3 p-2 rounded-2xl shadow"
-          >
-            <ArrowRight size={"30"} />
-          </button>
-        </div>
+        
       </div>
     </div>
   );

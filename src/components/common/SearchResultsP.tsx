@@ -37,7 +37,6 @@ const SearchResultsP = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col">
-
       {/* Top bar */}
       <div className="flex items-center sm:mt-10 gap-3 px-4 py-3 sticky top-0 z-10">
         <ArrowLeft
@@ -65,13 +64,12 @@ const SearchResultsP = () => {
         {!loading && query && result.length === 0 && (
           <p className="text-gray-400 text-center mt-10">No results found.</p>
         )}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {result.map((track) => (
             <CartTrending key={track.id} item={track} />
           ))}
         </div>
       </div>
-
     </div>
   );
 };

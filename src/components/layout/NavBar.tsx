@@ -5,7 +5,7 @@ import { useTheme } from "../../stores/themeStores";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 const NavBar = () => {
-  const location = useLocation();
+  const location = useLocation(); 
   const mobileDropdownRef = useRef<HTMLDivElement>(null);
   const desktopDropdownRef = useRef<HTMLDivElement>(null);
   const { isDarkModeOn, toggleDarkMode } = useTheme();

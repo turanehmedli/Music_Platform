@@ -17,6 +17,9 @@ import PageNotFound from "./components/common/PageNotFound";
 import { useAuthStore } from "./stores/useAuthStore";
 import TabBar from "./components/layout/TabBar";
 import MiniPlayer from "./components/home/MiniPlayer";
+import { X } from "lucide-react";
+import { useTrackSheet } from "./stores/useTrackSheet";
+import MusicDetailsContent from "./components/home/MusicDetailsContent";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { accessToken, hasHydrated } = useAuthStore();
@@ -29,10 +32,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const App = () => {
   const { isDarkModeOn } = useTheme();
   const { accessToken, hasHydrated } = useAuthStore();
+  const { isOpen, trackId, closeSheet } = useTrackSheet();
 
   return (
     <div
-      className={`w-full min-h-screen h-fit flex flex-col justify-center relative items-center ease-in-out duration-200 xl:pl-60 sm:pb-10 pb-15  overflow-hidden ${
+      className={`w-full min-h-screen h-fit flex flex-col justify-center relative items-center ease-in-out duration-200 xl:pl-60 sm:pb-10 pb-15 overflow-hidden ${
         isDarkModeOn
           ? "bg-slate-900 text-amber-50"
           : "bg-gray-100 text-shadow-amber-50"
@@ -73,8 +77,33 @@ const App = () => {
       </Routes>
 
       {accessToken && hasHydrated && (
-        <div className="">
-          <MiniPlayer />
+        <MiniPlayer />
+      )}
+
+      {/* Desktop Sheet */}
+      {isOpen && trackId && (
+        <div className="fixed inset-0 z-10 hidden lg:flex">
+          {/* Backdrop */}
+          <div
+            className="flex-1 "
+            onClick={closeSheet}
+          />
+          {/* Panel */}
+          <div
+            className="w-100 h-full overflow-y-auto relative shadow-2xl"
+            style={{
+              animation: "slideIn 0.3s cubic-bezier(.22,1,.36,1)",
+              background: isDarkModeOn ? "#0f0f13" : "#ffffff",
+            }}
+          >
+            <button
+              onClick={closeSheet}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/10 hover:bg-black/20 transition"
+            >
+              <X className={`size-5 ${isDarkModeOn ? "text-white" : "text-black"}`} />
+            </button>
+            <MusicDetailsContent id={trackId} onClose={closeSheet} />
+          </div>
         </div>
       )}
     </div>
