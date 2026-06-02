@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../stores/useAuthStore";
 
 const api = axios.create({
-  baseURL: "https://discoveryprovider.audius.co/v1",
+  baseURL: "https://api.audius.co/v1",
   timeout: 10000,
 });
 

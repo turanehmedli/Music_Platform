@@ -9,12 +9,11 @@ import { useTrackSheet } from "../../stores/useTrackSheet";
 
 type CartTrendingProps = {
   item: Track;
-  onPlay?: (track: Track) => void;
   onAddToPlaylist?: (track: Track) => void;
 };
 
-const CartTrending = ({ item, onPlay, onAddToPlaylist }: CartTrendingProps) => {
-  const { track, playing, progress, duration, togglePlayPause, seek, play } =
+const CartTrending = ({ item, onAddToPlaylist }: CartTrendingProps) => {
+  const { track, playing, togglePlayPause, play } =
     usePlayerStore();
   const { isDarkModeOn } = useTheme();
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -35,7 +34,7 @@ const CartTrending = ({ item, onPlay, onAddToPlaylist }: CartTrendingProps) => {
     <div
       onClick={handleCardClick}
       className={`
-        sm:max-w-55 max-w-60 w-full flex flex-col gap-2 cursor-pointer
+        sm:max-w-55 h-fit max-w-60 w-full flex flex-col gap-2 cursor-pointer
         ${isDarkModeOn ? "bg-[#1a1a24] border-white/5" : "bg-[#f3f3f5] border-black/5"}
         border p-2.5 rounded-2xl
         transition-all duration-300 ease-out

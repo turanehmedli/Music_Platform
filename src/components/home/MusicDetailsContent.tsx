@@ -140,7 +140,7 @@ const MusicDetailsContent = ({ id, onClose }: Props) => {
           </div>
         </div>
 
-        <div className="flex flex-col items-start gap-6 px-6 py-8">
+        <div className="flex flex-col items-start gap-6 px-6 py-8"> 
           <div className="flex flex-col w-full gap-1 flex-1">
             <h1 className="sm:text-2xl text-md font-black truncate">
               {track.title}

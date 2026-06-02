@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Track } from "../types/track";
 
-const BASE_URL = "https://discoveryprovider.audius.co/v1";
+const BASE_URL = "https://api.audius.co/v1";
 
 interface PlayerState {
   track: Track | null;
@@ -16,6 +16,8 @@ interface PlayerState {
   setDuration: (t: number) => void;
   setPlaying: (v: boolean) => void;
 }
+
+
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
   track: null,
@@ -64,6 +66,8 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       set({ playing: true });
     }
   },
+
+  
 
   seek: (time) => {
     const { audio } = get();
