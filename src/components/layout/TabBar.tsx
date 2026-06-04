@@ -50,7 +50,7 @@ const TabBar = () => {
         <p className="text-sm">Search</p>
       </NavLink>
       <NavLink className="flex flex-col items-center" to={'/profile'}>
-        <img src={avatarSrc} className="size-6 rounded-full" />
+        <img src={avatarSrc} className="size-6 object-cover rounded-full" />
         <p className="text-sm">Profile</p>
       </NavLink>
       
