@@ -113,7 +113,7 @@ const NavBar = () => {
       <div ref={desktopDropdownRef} className="relative sm:flex hidden">
         <button onClick={() => setActive((prev) => !prev)}
           className="border size-13 rounded-full flex items-center justify-center cursor-pointer">
-            <img className="rounded-full" src={avatarSrc} alt="" />
+            <img className="rounded-full object-cover" src={avatarSrc} alt="" />
         </button>
 
         <div

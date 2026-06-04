@@ -15,6 +15,8 @@ import { usePlayerStore } from "../stores/usePlayerStore";
 import { useEffect, useRef, useState } from "react";
 import { getMultipleArtists } from "../api/tracks";
 import CartArtist from "../components/home/CartArtist";
+import { usePlaylistStore } from "../stores/usePlaylistStore";
+import { X, ListMusic } from "lucide-react";
 
 const Homepage = () => {
   const { following } = useFollowing();
@@ -32,7 +34,40 @@ const Homepage = () => {
     togglePlayPause,
     seek,
     play,
+    
   } = usePlayerStore();
+
+  // mevcut state'lerin altına ekle
+const { playlists, addTrackToPlaylist, createPlaylist } = usePlaylistStore();
+const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+const [showCreateModal, setShowCreateModal] = useState(false);
+const [playlistName, setPlaylistName] = useState("");
+const [playlistDesc, setPlaylistDesc] = useState("");
+const [addedId, setAddedId] = useState<string | null>(null);
+
+const handleAddToPlaylist = (playlistId: string) => {
+  if (!displayTrack) return;
+  addTrackToPlaylist(playlistId, displayTrack);
+  setAddedId(playlistId);
+  setTimeout(() => {
+    setAddedId(null);
+    setShowPlaylistModal(false);
+  }, 800);
+};
+
+const handleCreateAndAdd = () => {
+  if (!playlistName.trim() || !displayTrack) return;
+  createPlaylist(playlistName, playlistDesc);
+  setTimeout(() => {
+    const updated = usePlaylistStore.getState().playlists;
+    const newest = updated[updated.length - 1];
+    if (newest) addTrackToPlaylist(newest.id, displayTrack);
+  }, 50);
+  setPlaylistName("");
+  setPlaylistDesc("");
+  setShowCreateModal(false);
+  setShowPlaylistModal(false);
+};
 
   const displayTrack = playerTrack || lastPlayed;
   const isPlaying = playing && !!playerTrack;
@@ -286,15 +321,15 @@ const Homepage = () => {
                       play(displayTrack);
                     }
                   }}
-                  className="p-2 rounded-full hover:bg-slate-600 transition-colors"
+                  className="p-2 rounded-full hover:bg-slate-600 transition-colors cursor-pointer"
                   title="Restart"
                 >
-                  <RotateCcw className="size-6 md:size-7 text-slate-300" />
+                  <RotateCcw className="size-6 md:size-7 text-gray-600" />
                 </button>
-                <StepBack className="size-6 md:size-7 text-gray-600 cursor-pointer" />
+               
                 <button
                   onClick={handlePlayPause}
-                  className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                  className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all cursor-pointer"
                 >
                   {isPlaying && playerTrack?.id === displayTrack.id ? (
                     <Pause className="size-6 md:size-7 text-white" />
@@ -303,9 +338,12 @@ const Homepage = () => {
                   )}
                 </button>
 
-                <StepForward className="size-6 md:size-7 text-gray-600 cursor-pointer" />
-                <button>
-                  <Plus className="size-6 md:size-7 text-gray-600 cursor-pointer" />
+                
+               
+                <button onClick={() => setShowPlaylistModal(true)}
+                  className="p-2 rounded-full hover:bg-slate-600 transition-colors cursor-pointer"
+                >
+                  <Plus className="size-6 md:size-7 text-gray-600 hover:text-white transition-colors" />
                 </button>
               </div>
             </>
@@ -351,6 +389,148 @@ const Homepage = () => {
           ))}
         </div>
       </div>
+      
+{/* Playlist Seçim Modalı */}
+      {showPlaylistModal && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowPlaylistModal(false)}
+        >
+          <div
+            className="bg-[#1a1a2e] border border-white/10 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 pt-5 pb-3">
+              <div>
+                <p className="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-1">
+                  Add to Playlist
+                </p>
+                <p className="text-sm text-white/55">
+                  <span className="text-green-400 font-medium">
+                    "{displayTrack?.title}"
+                  </span>
+                </p>
+              </div>
+              <button
+                onClick={() => setShowPlaylistModal(false)}
+                className="w-8 h-8 rounded-full bg-white/8 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/15 transition-colors"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            <div className="max-h-60 overflow-y-auto px-2 pb-2">
+              {playlists.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 py-8 text-center">
+                  <ListMusic className="size-10 text-white/15" />
+                  <p className="text-sm text-white/40">No playlists yet</p>
+                </div>
+              ) : (
+                playlists.map((pl) => (
+                  <button
+                    key={pl.id}
+                    onClick={() => handleAddToPlaylist(pl.id)}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/7 transition-colors text-left"
+                  >
+                    <div className="size-9 rounded-lg bg-green-500/15 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                      {pl.tracks[0]?.artwork?.["150x150"] ? (
+                        <img
+                          src={pl.tracks[0].artwork["150x150"]}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <ListMusic className="size-4 text-green-500" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-white truncate">{pl.name}</p>
+                      <p className="text-xs text-white/35">{pl.tracks.length} songs</p>
+                    </div>
+                    {addedId === pl.id && (
+                      <span className="text-green-400 text-sm font-bold">✓</span>
+                    )}
+                  </button>
+                ))
+              )}
+            </div>
+
+            <div className="border-t border-white/8 p-3">
+              <button
+                onClick={() => {
+                  setShowPlaylistModal(false);
+                  setShowCreateModal(true);
+                }}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-green-500/12 hover:bg-green-500/22 transition-colors text-green-400 font-semibold text-sm"
+              >
+                <Plus className="size-4" />
+                Create new playlist
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Yeni Playlist Oluşturma Modalı */}
+      {showCreateModal && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowCreateModal(false)}
+        >
+          <div
+            className="bg-slate-800 border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-white">Create New Playlist</h2>
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="text-white/50 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="text-sm text-white/50 mb-4">
+              <span className="text-green-400 font-medium">"{displayTrack?.title}"</span>{" "}
+              will be added automatically.
+            </p>
+
+            <input
+              type="text"
+              placeholder="Playlist name"
+              value={playlistName}
+              onChange={(e) => setPlaylistName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleCreateAndAdd()}
+              className="w-full px-4 py-3 rounded-lg bg-slate-700 border border-slate-600 text-white mb-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 placeholder:text-slate-400"
+              autoFocus
+            />
+
+            <textarea
+              placeholder="Description (optional)"
+              value={playlistDesc}
+              onChange={(e) => setPlaylistDesc(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-slate-700 border border-slate-600 text-white mb-4 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 placeholder:text-slate-400 resize-none"
+              rows={2}
+            />
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="flex-1 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-semibold transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateAndAdd}
+                disabled={!playlistName.trim()}
+                className="flex-1 px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold transition-colors"
+              >
+                Create & Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
