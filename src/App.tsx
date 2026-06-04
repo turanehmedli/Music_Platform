@@ -22,6 +22,7 @@ import { useTrackSheet } from "./stores/useTrackSheet";
 import MusicDetailsContent from "./components/home/MusicDetailsContent";
 import Playlist from "./pages/Playlist";
 import PlaylistDetails from "./components/home/PlaylistDetails";
+import Following from "./pages/Following";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { accessToken, hasHydrated } = useAuthStore();
@@ -82,6 +83,7 @@ const App = () => {
           <Route path="*" element={<PageNotFound />} />
           <Route path="/playlists" element={<ProtectedRoute><Playlist /></ProtectedRoute>} />
           <Route path="/playlist/:id" element={<ProtectedRoute><PlaylistDetails /></ProtectedRoute>} />
+          <Route path="/following" element={<ProtectedRoute><Following /></ProtectedRoute>} />
         </Routes>
 
         {accessToken && hasHydrated && <MiniPlayer />}

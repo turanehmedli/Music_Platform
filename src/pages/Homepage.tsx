@@ -194,7 +194,7 @@ const handleCreateAndAdd = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-2xl md:text-3xl font-bold">Following</h2>
             {following.length > 0 && (
-              <button className="text-green-500 hover:text-green-400 text-sm font-semibold flex items-center gap-1 transition-colors">
+              <button onClick={()=> navigate('/following')} className="text-green-500 hover:text-green-400 text-sm font-semibold flex items-center gap-1 transition-colors">
                 View All <ArrowRight size={16} />
               </button>
             )}
