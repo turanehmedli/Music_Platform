@@ -59,7 +59,7 @@ const DrawerBar = () => {
         to={"/profile"}
       >
         {" "}
-        <img src={avatarSrc} className="size-[30px] rounded-full" alt="" />
+        <img src={avatarSrc} className="size-[30px] object-cover rounded-full" alt="" />
         Profile
       </NavLink>
 
