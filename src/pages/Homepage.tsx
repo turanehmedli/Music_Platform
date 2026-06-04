@@ -6,9 +6,7 @@ import {
   Play,
   RotateCcw,
   ArrowRight,
-  StepForward,
   Plus,
-  StepBack,
   ArrowLeft,
 } from "lucide-react";
 import { usePlayerStore } from "../stores/usePlayerStore";
