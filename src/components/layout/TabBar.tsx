@@ -53,6 +53,7 @@ const TabBar = () => {
         <img src={avatarSrc} className="size-6 rounded-full" />
         <p className="text-sm">Profile</p>
       </NavLink>
+      
     </div>
   )
 }

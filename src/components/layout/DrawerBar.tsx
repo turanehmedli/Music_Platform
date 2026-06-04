@@ -1,4 +1,4 @@
-import { Compass, Heart, Home, Search } from "lucide-react";
+import { Compass, Heart, Home, Music, Search, Settings } from "lucide-react";
 import { NavLink } from "react-router";
 import { useTheme } from "../../stores/themeStores";
 import { useAuthStore } from "../../stores/useAuthStore";
@@ -47,11 +47,29 @@ const DrawerBar = () => {
 
       <NavLink
         className={`w-full hover:bg-gray-400 text-lg font-semibold flex gap-3 transition-all duration-300 py-3 px-2 rounded-lg`}
+        to={"/playlists"}
+      >
+        {" "}
+        <Music size={"30"} />
+        Playlist
+      </NavLink>
+
+      <NavLink
+        className={`w-full hover:bg-gray-400 text-lg font-semibold flex gap-3 transition-all duration-300 py-3 px-2 rounded-lg`}
         to={"/profile"}
       >
         {" "}
         <img src={avatarSrc} className="size-[30px] rounded-full" alt="" />
         Profile
+      </NavLink>
+
+      <NavLink
+        className={`w-full hover:bg-gray-400 text-lg font-semibold flex gap-3 transition-all duration-300 py-3 px-2 rounded-lg`}
+        to={"/setting"}
+      >
+        {" "}
+        <Settings size={"30"} />
+        Settings
       </NavLink>
 
       <div className="w-full border-t my-2 py-3 border-zinc-300 "/>

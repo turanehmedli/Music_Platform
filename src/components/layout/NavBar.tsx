@@ -92,6 +92,13 @@ const NavBar = () => {
             Favorite
           </NavLink>
 
+          <NavLink
+            to={"/playlists"}
+            className="block p-3 border-b hover:bg-gray-400 border-zinc-500 text-lg text-start font-semibold transition-all duration-300 rounded-lg cursor-pointer"
+          >
+            Playlists
+          </NavLink>
+
           
           <button
             onClick={toggleDarkMode}
@@ -139,6 +146,14 @@ const NavBar = () => {
           >
             DarkMode
           </button>
+          
+          <NavLink
+            className="block p-3 border-b hover:bg-gray-400 border-zinc-500 text-lg font-semibold transition-all duration-300 rounded-lg cursor-pointer"
+            to={"/playlists"}
+          >
+            Playlist
+          </NavLink>
+
           <NavLink
             className="block p-3 border-b hover:bg-gray-400 border-zinc-500 text-lg font-semibold transition-all duration-300 rounded-lg cursor-pointer"
             to={"/help"}

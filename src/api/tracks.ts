@@ -25,3 +25,18 @@ export const searchTracks = async (query:string):Promise<Track[]>=>{
   const res = await api.get(`/tracks/search?query=${encodeURIComponent(query)}`)
   return res.data.data
 }
+
+export const getUserSearch = async (query:string):Promise<Track> => {
+  const res = await api.get(`/users/search?query=${encodeURIComponent(query)}`)
+  return res.data.data
+}
+
+export const getMultipleArtists = async (queries: string[]): Promise<Track[]> => {
+  const results = await Promise.all(
+    queries.map(query => getUserSearch(query))
+  )
+  return results.flat() 
+}
+
+
+

@@ -9,6 +9,11 @@ interface PlayerState {
   progress: number;
   duration: number;
   audio: HTMLAudioElement | null;
+  queue: Track[];
+  queueIndex: number;
+  setQueue: (tracks: Track[], startIndex?: number) => void;
+  nextTrack: () => void;
+  prevTrack: () => void;
   play: (track: Track) => void;
   togglePlayPause: () => void;
   seek: (time: number) => void;
@@ -17,7 +22,46 @@ interface PlayerState {
   setPlaying: (v: boolean) => void;
 }
 
+const buildAudio = (
+  track: Track,
+  set: (partial: Partial<PlayerState>) => void,
+  get: () => PlayerState
+) => {
+  const prev = get().audio;
+  if (prev) {
+    prev.pause();
+    prev.ontimeupdate = null;
+    prev.onloadedmetadata = null;
+    prev.onended = null;
+    prev.src = "";
+  }
 
+  const audio = new Audio(`${BASE_URL}/tracks/${track.id}/stream`);
+
+  let lastUpdate = 0;
+  audio.ontimeupdate = () => {
+    const now = Date.now();
+    if (now - lastUpdate < 500) return;
+    lastUpdate = now;
+    set({ progress: audio.currentTime });
+  };
+
+  audio.onloadedmetadata = () => set({ duration: audio.duration });
+
+  audio.onended = () => {
+    const { queue, queueIndex } = get();
+    if (queue.length > 1) {
+      const nextIndex = (queueIndex + 1) % queue.length;
+      set({ queueIndex: nextIndex });
+      buildAudio(queue[nextIndex], set, get);
+    } else {
+      set({ playing: false });
+    }
+  };
+
+  audio.play();
+  set({ track, audio, playing: true, progress: 0, duration: 0 });
+};
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
   track: null,
@@ -25,11 +69,42 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   progress: 0,
   duration: 0,
   audio: null,
+  queue: [],
+  queueIndex: -1,
+
+  setQueue: (tracks, startIndex = 0) => {
+    set({ queue: tracks, queueIndex: startIndex });
+  },
+
+  nextTrack: () => {
+    const { queue, queueIndex } = get();
+    console.log("queue length:", queue.length, "current index:", queueIndex);
+    console.log("next track:", queue[(queueIndex + 1) % queue.length]?.title);
+    if (queue.length === 0) return;
+    const nextIndex = (queueIndex + 1) % queue.length;
+    set({ queueIndex: nextIndex });
+    buildAudio(queue[nextIndex], set, get);
+  },
+
+  prevTrack: () => {
+    const { queue, queueIndex, progress } = get();
+    if (progress > 3) {
+      const { audio } = get();
+      if (audio) {
+        audio.currentTime = 0;
+        set({ progress: 0 });
+      }
+      return;
+    }
+    if (queue.length === 0) return;
+    const prevIndex = (queueIndex - 1 + queue.length) % queue.length;
+    set({ queueIndex: prevIndex });
+    buildAudio(queue[prevIndex], set, get);
+  },
 
   play: (track) => {
     const { audio: prev, track: currentTrack } = get();
 
-    // Aynı şarkıysa sadece baştan başlat, yeni Audio oluşturma
     if (prev && currentTrack?.id === track.id) {
       prev.currentTime = 0;
       prev.play();
@@ -37,22 +112,13 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       return;
     }
 
-    // Farklı şarkıysa önce eskiyi tamamen durdur
-    if (prev) {
-      prev.pause();
-      prev.ontimeupdate = null;
-      prev.onloadedmetadata = null;
-      prev.onended = null;
-      prev.src = "";
+    const { queue } = get();
+    const idx = queue.findIndex((t) => t.id === track.id);
+    if (idx !== -1) {
+      set({ queueIndex: idx });
     }
 
-    const audio = new Audio(`${BASE_URL}/tracks/${track.id}/stream`);
-    audio.ontimeupdate = () => set({ progress: audio.currentTime });
-    audio.onloadedmetadata = () => set({ duration: audio.duration });
-    audio.onended = () => set({ playing: false });
-
-    audio.play();
-    set({ track, audio, playing: true, progress: 0, duration: 0 });
+    buildAudio(track, set, get);
   },
 
   togglePlayPause: () => {
@@ -66,8 +132,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       set({ playing: true });
     }
   },
-
-  
 
   seek: (time) => {
     const { audio } = get();

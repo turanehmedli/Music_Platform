@@ -1,13 +1,28 @@
 import { useFollowing } from "../stores/useFollowing";
 import { useLastPlayed } from "../stores/useLastPlayed";
 import { useNavigate } from "react-router";
-import { Pause, Play, RotateCcw, ArrowRight } from "lucide-react";
+import {
+  Pause,
+  Play,
+  RotateCcw,
+  ArrowRight,
+  StepForward,
+  Plus,
+  StepBack,
+  ArrowLeft,
+} from "lucide-react";
 import { usePlayerStore } from "../stores/usePlayerStore";
+import { useEffect, useRef, useState } from "react";
+import { getMultipleArtists } from "../api/tracks";
+import CartArtist from "../components/home/CartArtist";
 
 const Homepage = () => {
   const { following } = useFollowing();
   const { lastPlayed } = useLastPlayed();
   const navigate = useNavigate();
+  const [artists, setArtists] = useState<any[]>([]);
+
+  const ArtistRef = useRef<HTMLDivElement>(null);
 
   const {
     track: playerTrack,
@@ -41,6 +56,36 @@ const Homepage = () => {
       ? (progress / (duration || 1)) * 100
       : 0;
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [artists] = await Promise.all([
+          getMultipleArtists([
+            "eminem",
+            "drake",
+            "Kendrick",
+            "justin-bieber",
+            "the-weeknd",
+          ]),
+        ]);
+
+        setArtists(artists);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const leftArtist = () => {
+    ArtistRef.current?.scrollBy({ left: -400, behavior: "smooth" });
+  };
+
+  const rightArtist = () => {
+    ArtistRef.current?.scrollBy({ left: 400, behavior: "smooth" });
+  };
+
   return (
     <div className="w-full min-h-screen flex flex-col p-4 md:p-6 lg:p-8 gap-4 md:gap-6 lg:gap-8 pb-24 overflow-hidden">
       {/* Welcome Header */}
@@ -53,7 +98,6 @@ const Homepage = () => {
         </p>
       </div>
 
-      {/* Last Played Section */}
       {lastPlayed && (
         <div
           className="group w-full h-40 md:h-56 rounded-2xl overflow-hidden relative cursor-pointer shrink-0 hover:shadow-2xl transition-all duration-300"
@@ -111,7 +155,7 @@ const Homepage = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 flex-1">
         {/* Following Artists */}
         <div className="lg:col-span-2 flex flex-col gap-3 md:gap-4">
           <div className="flex justify-between items-center">
@@ -167,7 +211,7 @@ const Homepage = () => {
         </div>
 
         {/* Now Playing Card */}
-        <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 md:p-6 flex flex-col gap-3 md:gap-4 shadow-xl h-fit">
+        <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 md:p-6 flex flex-col gap-3 md:gap-4 shadow-xl  h-fit">
           <h2 className="text-xl md:text-2xl font-bold">Now Playing</h2>
 
           {displayTrack ? (
@@ -183,7 +227,7 @@ const Homepage = () => {
                     displayTrack.artwork?.["150x150"]
                   }
                   alt=""
-                  className="w-full h-32 md:h-40 lg:h-48 rounded-xl object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-52 md:h-40 lg:h-48 rounded-xl object-cover group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 rounded-xl transition-colors" />
               </div>
@@ -233,7 +277,7 @@ const Homepage = () => {
               </div>
 
               {/* Controls */}
-              <div className="flex items-center justify-center gap-2 md:gap-3 mt-2">
+              <div className="flex items-center justify-center gap-6 md:gap-3 mt-2">
                 <button
                   onClick={() => {
                     if (playerTrack?.id === displayTrack.id) {
@@ -245,33 +289,30 @@ const Homepage = () => {
                   className="p-2 rounded-full hover:bg-slate-600 transition-colors"
                   title="Restart"
                 >
-                  <RotateCcw className="w-4 h-4 md:w-5 md:h-5 text-slate-300" />
+                  <RotateCcw className="size-6 md:size-7 text-slate-300" />
                 </button>
-
+                <StepBack className="size-6 md:size-7 text-gray-600 cursor-pointer" />
                 <button
                   onClick={handlePlayPause}
                   className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                 >
                   {isPlaying && playerTrack?.id === displayTrack.id ? (
-                    <Pause className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                    <Pause className="size-6 md:size-7 text-white" />
                   ) : (
-                    <Play className="w-5 h-5 md:w-6 md:h-6 text-white ml-0.5 fill-white" />
+                    <Play className="size-6 md:size-7 text-white ml-0.5 fill-white" />
                   )}
                 </button>
 
-                <button
-                  onClick={() => navigate(`/discover/music/${displayTrack.id}`)}
-                  className="p-2 rounded-full hover:bg-slate-600 transition-colors"
-                  title="View Details"
-                >
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-slate-300" />
+                <StepForward className="size-6 md:size-7 text-gray-600 cursor-pointer" />
+                <button>
+                  <Plus className="size-6 md:size-7 text-gray-600 cursor-pointer" />
                 </button>
               </div>
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 py-6">
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-600/50 flex items-center justify-center">
-                <Play className="w-8 h-8 md:w-10 md:h-10 text-slate-400" />
+                <Play className="size-6 md:size-7 text-slate-400" />
               </div>
               <p className="text-slate-400 text-xs md:text-sm text-center">
                 Play a track to see it here
@@ -284,6 +325,30 @@ const Homepage = () => {
               </button>
             </div>
           )}
+        </div>
+      </div>
+
+      <div className="w-full p-1 flex flex-col gap-2">
+        <div className="flex w-full justify-between items-center">
+          <h2 className="lg:text-4xl sm:2xl text-xl font-black">Artist</h2>
+          <div className="flex gap-5 items-center pb-3">
+            <button onClick={leftArtist} className="cursor-pointer">
+              <ArrowLeft size={"30"} />
+            </button>
+            <button onClick={rightArtist} className="cursor-pointer">
+              <ArrowRight size={"30"} />
+            </button>
+          </div>
+        </div>
+        <div
+          ref={ArtistRef}
+          className="flex gap-10 overflow-x-auto scroll-smooth snap-x p-5 snap-mandatory scrollbar-hide"
+        >
+          {artists.map((data) => (
+            <div key={data.id} className="snap-start shrink-0">
+              <CartArtist item={data as any} />
+            </div>
+          ))}
         </div>
       </div>
     </div>

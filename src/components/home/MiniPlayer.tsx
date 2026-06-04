@@ -42,11 +42,11 @@ const MiniPlayer = () => {
         bg-gradient-to-r from-slate-800 via-slate-800 to-slate-900 border-t border-slate-600
         px-4 py-3
         flex items-center gap-4
-        shadow-2xl
+        
         transition-transform duration-300
         sm:bottom-0
-        bottom-16
-        ${visible ? "translate-y-0" : "translate-y-full"}
+        bottom-15
+        ${visible ? "translate-y-0" : "sm:translate-y-0 translate-y-full"}
       `}
     >
       {/* Track info */}
