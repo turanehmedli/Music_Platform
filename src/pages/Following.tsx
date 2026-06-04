@@ -11,7 +11,7 @@ const Following = () => {
         Following Artists
       </h1>
 
-      <div className=" gap-4">
+      <div className=" flex flex-col gap-4">
         {following.map((artist) => (
           <div
             key={artist.id}
