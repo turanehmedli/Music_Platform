@@ -17,7 +17,7 @@ const Favorite = () => {
             <NavLink to={'/discover'} className="flex border p-3 gap-3 font-bold text-md items-center hover:shadow-lg hover:bg-gray-200 hover:-translate-y-1 active:translate-0 hover:text-black ease-in-out duration-200 cursor-pointer shadow-gray-400 rounded-lg">Discover <ArrowRight></ArrowRight></NavLink>
             </div>
           ):(
-            <div className="grid grid-cols-3 min-h-screen h-fit gap-5 p-3">
+            <div className="grid sm:grid-cols-4 md:grid-cols-5 grid-cols-3 min-h-screen h-fit gap-5 p-3">
               {
                 favorites.map((track)=>(
                   <CartTrending key={track.id} item={track}/>

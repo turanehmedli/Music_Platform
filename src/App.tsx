@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from "react-router";
+import { Route, Routes, Navigate, useLocation } from "react-router";
 import Homepage from "./pages/Homepage";
 import DrawerBar from "./components/layout/DrawerBar";
 import Discover from "./pages/Discover";
@@ -23,6 +23,7 @@ import MusicDetailsContent from "./components/home/MusicDetailsContent";
 import Playlist from "./pages/Playlist";
 import PlaylistDetails from "./components/home/PlaylistDetails";
 import Following from "./pages/Following";
+import Help from "./pages/Help";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { accessToken, hasHydrated } = useAuthStore();
@@ -35,10 +36,11 @@ const App = () => {
   const { isDarkModeOn } = useTheme();
   const { accessToken, hasHydrated } = useAuthStore();
   const { isOpen, trackId, closeSheet } = useTrackSheet();
+  const location = useLocation();
+  const isAuthPage = ["/login", "/register"].includes(location.pathname);
 
   return (
     <div className="w-full min-h-screen flex relative">
-
       {/* Sol DrawerBar — sabit */}
       {accessToken && hasHydrated && (
         <div className="hidden xl:block fixed left-0 top-0 h-full w-[250px] z-30">
@@ -50,7 +52,7 @@ const App = () => {
       <div
         className={`
           flex flex-col min-h-screen w-full ease-in-out duration-300
-          xl:pl-[250px]
+          ${!isAuthPage && "xl:pl-[250px]"}
           ${isOpen ? "xl:pr-[380px]" : ""}
           ${isDarkModeOn ? "bg-slate-900 text-amber-50" : "bg-gray-100"}
           sm:pb-10 pb-15
@@ -71,19 +73,111 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<ProtectedRoute><Homepage /></ProtectedRoute>} />
-          <Route path="/discover" element={<ProtectedRoute><Discover /></ProtectedRoute>} />
-          <Route path="/favorite" element={<ProtectedRoute><Favorite /></ProtectedRoute>} />
-          <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
-          <Route path="/search/results" element={<ProtectedRoute><SearchResultsP /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/setting" element={<ProtectedRoute><Setting /></ProtectedRoute>} />
-          <Route path="/discover/music/:id" element={<ProtectedRoute><MusicDetails /></ProtectedRoute>} />
-          <Route path="/user/:id" element={<ProtectedRoute><UserProfileP /></ProtectedRoute>} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Homepage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/discover"
+            element={
+              <ProtectedRoute>
+                <Discover />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/favorite"
+            element={
+              <ProtectedRoute>
+                <Favorite />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <Search />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search/results"
+            element={
+              <ProtectedRoute>
+                <SearchResultsP />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/setting"
+            element={
+              <ProtectedRoute>
+                <Setting />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/discover/music/:id"
+            element={
+              <ProtectedRoute>
+                <MusicDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/:id"
+            element={
+              <ProtectedRoute>
+                <UserProfileP />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<PageNotFound />} />
-          <Route path="/playlists" element={<ProtectedRoute><Playlist /></ProtectedRoute>} />
-          <Route path="/playlist/:id" element={<ProtectedRoute><PlaylistDetails /></ProtectedRoute>} />
-          <Route path="/following" element={<ProtectedRoute><Following /></ProtectedRoute>} />
+          <Route
+            path="/playlists"
+            element={
+              <ProtectedRoute>
+                <Playlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/playlist/:id"
+            element={
+              <ProtectedRoute>
+                <PlaylistDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/following"
+            element={
+              <ProtectedRoute>
+                <Following />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help"
+            element={
+              <ProtectedRoute>
+                <Help />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
 
         {accessToken && hasHydrated && <MiniPlayer />}
@@ -96,14 +190,18 @@ const App = () => {
           style={{
             animation: "slideIn 0.3s cubic-bezier(.22,1,.36,1)",
             background: isDarkModeOn ? "#0f0f13" : "#ffffff",
-            borderColor: isDarkModeOn ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
+            borderColor: isDarkModeOn
+              ? "rgba(255,255,255,0.08)"
+              : "rgba(0,0,0,0.08)",
           }}
         >
           <button
             onClick={closeSheet}
             className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-black/10 hover:bg-black/20 transition"
           >
-            <X className={`size-4 ${isDarkModeOn ? "text-white" : "text-black"}`} />
+            <X
+              className={`size-4 ${isDarkModeOn ? "text-white" : "text-black"}`}
+            />
           </button>
           <MusicDetailsContent id={trackId} onClose={closeSheet} />
         </div>

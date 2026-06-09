@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
 import { useTheme } from "../stores/themeStores";
+import { NavLink } from "react-router";
 
 const Setting = () => {
   const { email, setEmail, setPassword, clearToken } = useAuthStore();
@@ -19,28 +20,28 @@ const Setting = () => {
 
   const handleEmailChange = () => {
     if (!newEmail.includes("@")) {
-      setEmailMsg("Geçerli bir email gir.");
+      setEmailMsg("Please enter a valid email address.");
       return;
     }
     setEmail(newEmail);
     setNewEmail("");
     setShowEmailForm(false);
-    setEmailMsg("Email güncellendi.");
+    setEmailMsg("Email updated.");
     setTimeout(() => setEmailMsg(""), 3000);
   };
 
   const handlePasswordChange = () => {
     const storedPassword = useAuthStore.getState().password;
     if (currentPassword !== storedPassword) {
-      setPassMsg("Mevcut şifre yanlış.");
+      setPassMsg("Current password is incorrect.");
       return;
     }
     if (newPassword.length < 6) {
-      setPassMsg("Yeni şifre en az 6 karakter olmalı.");
+      setPassMsg("New password must be at least 6 characters long.");
       return;
     }
     if (newPassword !== confirmPassword) {
-      setPassMsg("Şifreler eşleşmiyor.");
+      setPassMsg("Passwords do not match.");
       return;
     }
     setPassword(newPassword);
@@ -48,7 +49,7 @@ const Setting = () => {
     setNewPassword("");
     setConfirmPassword("");
     setShowPasswordForm(false);
-    setPassMsg("Şifre güncellendi.");
+    setPassMsg("Password updated.");
     setTimeout(() => setPassMsg(""), 3000);
   };
 
@@ -93,7 +94,7 @@ const Setting = () => {
         <p className="text-xs uppercase tracking-widest text-gray-400 mb-2 px-1">
           Account
         </p>
-        <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700/40 overflow-hidden divide-y divide-gray-200 dark:divide-gray-700/40">
 
           {/* Email */}
           <div>
@@ -102,14 +103,14 @@ const Setting = () => {
                 setShowEmailForm((p) => !p);
                 setShowPasswordForm(false);
               }}
-              className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-300/40 transition-colors"
             >
               <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
                 ✉️
               </div>
               <div className="flex-1 text-left">
                 <p className="text-sm font-medium">Email address</p>
-                <p className="text-xs text-gray-400">{email || "Henüz ayarlanmadı"}</p>
+                <p className="text-xs text-gray-400">{email || "Not yet set"}</p>
               </div>
               <span className="text-gray-400 text-sm">›</span>
             </button>
@@ -118,7 +119,7 @@ const Setting = () => {
               <div className="px-5 pb-4 flex flex-col gap-2">
                 <input
                   type="email"
-                  placeholder="Yeni email"
+                  placeholder="New Email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -127,7 +128,7 @@ const Setting = () => {
                   onClick={handleEmailChange}
                   className="self-end text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-lg transition-colors"
                 >
-                  Kaydet
+                  Save
                 </button>
                 {emailMsg && (
                   <p className="text-xs text-green-500">{emailMsg}</p>
@@ -143,7 +144,7 @@ const Setting = () => {
                 setShowPasswordForm((p) => !p);
                 setShowEmailForm(false);
               }}
-              className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-300/40 transition-colors"
             >
               <div className="w-9 h-9 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center text-teal-600 dark:text-teal-300">
                 🔒
@@ -159,21 +160,21 @@ const Setting = () => {
               <div className="px-5 pb-4 flex flex-col gap-2">
                 <input
                   type="password"
-                  placeholder="Mevcut şifre"
+                  placeholder="Current Password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
                 <input
                   type="password"
-                  placeholder="Yeni şifre"
+                  placeholder="New Password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
                 <input
                   type="password"
-                  placeholder="Yeni şifre (tekrar)"
+                  placeholder="Confirm New Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-400"
@@ -182,10 +183,10 @@ const Setting = () => {
                   onClick={handlePasswordChange}
                   className="self-end text-sm bg-teal-500 hover:bg-teal-600 text-white px-4 py-1.5 rounded-lg transition-colors"
                 >
-                  Güncelle
+                  Update
                 </button>
                 {passMsg && (
-                  <p className={`text-xs ${passMsg.includes("yanlış") || passMsg.includes("eşleşmiyor") || passMsg.includes("karakter") ? "text-red-500" : "text-green-500"}`}>
+                  <p className={`text-xs ${passMsg.includes("incorrect") || passMsg.includes("do not match") || passMsg.includes("at least 6 characters") ? "text-red-500" : "text-green-500"}`}>
                     {passMsg}
                   </p>
                 )}
@@ -200,7 +201,7 @@ const Setting = () => {
         <p className="text-xs uppercase tracking-widest text-gray-400 mb-2 px-1">
           Session
         </p>
-        <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="rounded-t-xl border border-gray-200 dark:border-gray-700/40 overflow-hidden">
           <button
             onClick={clearToken}
             className="w-full flex items-center gap-3 px-5 py-4 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -209,6 +210,14 @@ const Setting = () => {
               🚪
             </div>
             <p className="text-sm font-medium text-red-500">Log out</p>
+          </button>
+        </div>
+        <div className="rounded-b-xl border-x-1 border-b-1 border-gray-200 dark:border-gray-700/40 hover:border-gray-700/50 overflow-hidden">
+          <button
+            className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-600/40 transition-colors"
+          >
+            
+            <NavLink to={'/help'} className="text-sm font-medium ">Help</NavLink>
           </button>
         </div>
       </section>

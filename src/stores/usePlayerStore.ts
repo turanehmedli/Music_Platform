@@ -61,6 +61,11 @@ const buildAudio = (
 
   audio.play();
   set({ track, audio, playing: true, progress: 0, duration: 0 });
+
+  // her mahnı çalanda lastPlayı güncəlləyir
+  import("./useLastPlayed").then(({ useLastPlayed }) => {
+    useLastPlayed.getState().setLastPlayed(track);
+  });
 };
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
@@ -78,8 +83,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
   nextTrack: () => {
     const { queue, queueIndex } = get();
-    console.log("queue length:", queue.length, "current index:", queueIndex);
-    console.log("next track:", queue[(queueIndex + 1) % queue.length]?.title);
     if (queue.length === 0) return;
     const nextIndex = (queueIndex + 1) % queue.length;
     set({ queueIndex: nextIndex });
@@ -114,9 +117,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
     const { queue } = get();
     const idx = queue.findIndex((t) => t.id === track.id);
-    if (idx !== -1) {
-      set({ queueIndex: idx });
-    }
+    if (idx !== -1) set({ queueIndex: idx });
 
     buildAudio(track, set, get);
   },

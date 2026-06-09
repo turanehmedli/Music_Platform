@@ -1,24 +1,38 @@
 import { useParams, useNavigate } from "react-router";
 import { usePlaylistStore } from "../../stores/usePlaylistStore";
 import { usePlayerStore } from "../../stores/usePlayerStore";
+import { useTheme } from "../../stores/themeStores";
 import { ArrowLeft, Play, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 const PlaylistDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isDarkModeOn } = useTheme();
+
   const { playlists, removeTrackFromPlaylist, updatePlaylist } =
     usePlaylistStore();
   const { play, track: currentTrack } = usePlayerStore();
+
   const [editName, setEditName] = useState("");
   const [editDesc, setEditDesc] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   const playlist = playlists.find((p) => p.id === id);
 
+  const theme = {
+    page: isDarkModeOn ? "bg-slate-900 text-white" : "bg-white text-black",
+    card: isDarkModeOn ? "bg-slate-800" : "bg-gray-100",
+    cardHover: isDarkModeOn ? "hover:bg-slate-700" : "hover:bg-gray-200",
+    input: isDarkModeOn ? "bg-slate-600 text-white" : "bg-gray-200 text-black",
+    muted: isDarkModeOn ? "opacity-60" : "opacity-70",
+  };
+
   if (!playlist) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center">
+      <div
+        className={`w-full min-h-screen flex items-center justify-center ${theme.page}`}
+      >
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Playlist not found</h2>
           <button
@@ -54,7 +68,9 @@ const PlaylistDetail = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col p-4 md:p-6 lg:p-8 gap-6 pb-24">
+    <div
+      className={`w-full min-h-screen flex flex-col p-4 md:p-6 lg:p-8 gap-6 pb-24 ${theme.page}`}
+    >
       {/* Back Button */}
       <button
         onClick={() => navigate("/playlists")}
@@ -64,9 +80,15 @@ const PlaylistDetail = () => {
         Back to Playlists
       </button>
 
-      {/* Playlist Info Section */}
-      <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-4 md:p-8 flex flex-col md:flex-row gap-6 items-end">
-        {/* Playlist Cover */}
+      {/* Playlist Info */}
+      <div
+        className={`rounded-2xl p-4 md:p-8 flex flex-col md:flex-row gap-6 items-end ${
+          isDarkModeOn
+            ? "bg-gradient-to-br from-slate-700 to-slate-800"
+            : "bg-gray-100"
+        }`}
+      >
+        {/* Cover */}
         <div className="w-full md:w-48 md:h-48 aspect-square rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-600/20 flex items-center justify-center flex-shrink-0">
           <div className="grid grid-cols-2 gap-2 w-full h-full p-2">
             {playlist.tracks.slice(0, 4).map((track, idx) => (
@@ -84,7 +106,7 @@ const PlaylistDetail = () => {
           </div>
         </div>
 
-        {/* Playlist Info */}
+        {/* Info */}
         <div className="flex-1 w-full">
           {isEditing ? (
             <div className="space-y-3 mb-4">
@@ -92,12 +114,12 @@ const PlaylistDetail = () => {
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="w-full text-2xl md:text-4xl font-bold bg-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                className={`w-full text-2xl md:text-4xl font-bold rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 ${theme.input}`}
               />
               <textarea
                 value={editDesc}
                 onChange={(e) => setEditDesc(e.target.value)}
-                className="w-full bg-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500 resize-none text-sm"
+                className={`w-full rounded-lg px-3 py-2 resize-none text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${theme.input}`}
                 rows={2}
               />
               <div className="flex gap-2">
@@ -120,11 +142,13 @@ const PlaylistDetail = () => {
               <h1 className="text-2xl md:text-4xl font-bold mb-2">
                 {playlist.name}
               </h1>
+
               {playlist.description && (
-                <p className="text-base md:text-lg opacity-70 mb-4">
+                <p className={`text-base md:text-lg mb-4 ${theme.muted}`}>
                   {playlist.description}
                 </p>
               )}
+
               <button
                 onClick={() => {
                   setEditName(playlist.name);
@@ -137,7 +161,8 @@ const PlaylistDetail = () => {
               </button>
             </>
           )}
-          <p className="text-xs md:text-sm opacity-60 mt-4">
+
+          <p className={`text-xs md:text-sm mt-4 ${theme.muted}`}>
             {playlist.tracks.length} song
             {playlist.tracks.length !== 1 ? "s" : ""} • Created{" "}
             {formatDate(playlist.createdAt)}
@@ -145,17 +170,17 @@ const PlaylistDetail = () => {
         </div>
       </div>
 
-      {/* Tracks Section */}
+      {/* Tracks */}
       {playlist.tracks.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
-          <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-700 flex items-center justify-center">
+          <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center ${theme.card}`}>
             <Play className="w-8 h-8 md:w-10 md:h-10 text-slate-500" />
           </div>
           <div>
             <h2 className="text-xl md:text-2xl font-semibold mb-2">
               No tracks yet
             </h2>
-            <p className="text-sm md:text-base opacity-60 max-w-md">
+            <p className={`text-sm md:text-base max-w-md ${theme.muted}`}>
               Add songs from discover or search to get started
             </p>
           </div>
@@ -163,31 +188,32 @@ const PlaylistDetail = () => {
       ) : (
         <div>
           <h2 className="text-2xl font-bold mb-4">Tracks</h2>
+
           <div className="space-y-2">
             {playlist.tracks.map((track, index) => (
               <div
                 key={track.id}
-                className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 md:p-4 rounded-lg hover:bg-slate-700 transition-colors group cursor-pointer ${
+                className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 md:p-4 rounded-lg transition-colors group cursor-pointer ${
                   currentTrack?.id === track.id
-                    ? "bg-green-500/20"
-                    : "bg-slate-800"
-                }`}
+                    ? isDarkModeOn
+                      ? "bg-green-500/20"
+                      : "bg-green-200"
+                    : theme.card
+                } ${theme.cardHover}`}
                 onClick={() => handlePlayTrack(track.id)}
               >
-                {/* Track number and art */}
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <span className="text-sm opacity-60 w-6 flex-shrink-0">
                     {index + 1}
                   </span>
+
                   <img
                     src={
                       track.artwork?.["150x150"] || track.artwork?.["480x480"]
                     }
-                    alt={track.title}
                     className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shrink-0"
                   />
 
-                  {/* Track info */}
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold text-sm md:text-base truncate">
                       {track.title}
@@ -198,30 +224,31 @@ const PlaylistDetail = () => {
                   </div>
                 </div>
 
-                {/* Duration and actions */}
                 <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto">
                   <span className="text-xs opacity-60 shrink-0">
                     {track.duration && typeof track.duration === "number"
                       ? `${Math.floor(track.duration / 60)}:${String(
-                          Math.floor(track.duration % 60),
+                          Math.floor(track.duration % 60)
                         ).padStart(2, "0")}`
                       : "--:--"}
                   </span>
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePlayTrack(track.id);
                     }}
-                    className="opacity-0 group-hover:opacity-100 p-2 hover:bg-slate-600 rounded-lg transition-all flex-shrink-0"
+                    className="opacity-0 group-hover:opacity-100 p-2 hover:bg-slate-600 rounded-lg transition-all"
                   >
                     <Play size={16} className="fill-current" />
                   </button>
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       removeTrackFromPlaylist(playlist.id, track.id);
                     }}
-                    className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/20 text-red-400 rounded-lg transition-all flex-shrink-0"
+                    className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/20 text-red-400 rounded-lg transition-all"
                   >
                     <Trash2 size={16} />
                   </button>

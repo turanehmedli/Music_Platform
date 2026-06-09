@@ -16,7 +16,7 @@ const Following = () => {
           <div
             key={artist.id}
             onClick={() => navigate(`/user/${artist.id}`)}
-            className="flex  items-center gap-3 p-4 rounded-xl bg-slate-800 justify-between cursor-pointer hover:bg-slate-700 transition"
+            className="flex  items-center gap-3 p-4 rounded-xl bg-slate-80 justify-between cursor-pointer hover:bg-slate-700/40 transition"
           >
             <div className="flex items-center gap-3">
                 <img

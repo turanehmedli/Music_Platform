@@ -115,7 +115,7 @@ const SearchResultsP = () => {
             {tracks.length === 0 && query && (
               <p className="text-gray-400 text-center mt-10">No tracks found.</p>
             )}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {tracks.map((track) => (
                 <div key={track.id} onClick={() => handleTrackClick(track)}>
                   <CartTrending item={track} />

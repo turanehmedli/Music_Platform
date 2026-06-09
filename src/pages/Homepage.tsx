@@ -15,12 +15,15 @@ import { getMultipleArtists } from "../api/tracks";
 import CartArtist from "../components/home/CartArtist";
 import { usePlaylistStore } from "../stores/usePlaylistStore";
 import { X, ListMusic } from "lucide-react";
+import { useTheme } from "../stores/themeStores";
 
 const Homepage = () => {
   const { following } = useFollowing();
   const { lastPlayed } = useLastPlayed();
   const navigate = useNavigate();
   const [artists, setArtists] = useState<any[]>([]);
+  const { isDarkModeOn } = useTheme();
+  const dm = isDarkModeOn;
 
   const ArtistRef = useRef<HTMLDivElement>(null);
 
@@ -32,40 +35,38 @@ const Homepage = () => {
     togglePlayPause,
     seek,
     play,
-    
   } = usePlayerStore();
 
-  // mevcut state'lerin altına ekle
-const { playlists, addTrackToPlaylist, createPlaylist } = usePlaylistStore();
-const [showPlaylistModal, setShowPlaylistModal] = useState(false);
-const [showCreateModal, setShowCreateModal] = useState(false);
-const [playlistName, setPlaylistName] = useState("");
-const [playlistDesc, setPlaylistDesc] = useState("");
-const [addedId, setAddedId] = useState<string | null>(null);
+  const { playlists, addTrackToPlaylist, createPlaylist } = usePlaylistStore();
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [playlistName, setPlaylistName] = useState("");
+  const [playlistDesc, setPlaylistDesc] = useState("");
+  const [addedId, setAddedId] = useState<string | null>(null);
 
-const handleAddToPlaylist = (playlistId: string) => {
-  if (!displayTrack) return;
-  addTrackToPlaylist(playlistId, displayTrack);
-  setAddedId(playlistId);
-  setTimeout(() => {
-    setAddedId(null);
+  const handleAddToPlaylist = (playlistId: string) => {
+    if (!displayTrack) return;
+    addTrackToPlaylist(playlistId, displayTrack);
+    setAddedId(playlistId);
+    setTimeout(() => {
+      setAddedId(null);
+      setShowPlaylistModal(false);
+    }, 800);
+  };
+
+  const handleCreateAndAdd = () => {
+    if (!playlistName.trim() || !displayTrack) return;
+    createPlaylist(playlistName, playlistDesc);
+    setTimeout(() => {
+      const updated = usePlaylistStore.getState().playlists;
+      const newest = updated[updated.length - 1];
+      if (newest) addTrackToPlaylist(newest.id, displayTrack);
+    }, 50);
+    setPlaylistName("");
+    setPlaylistDesc("");
+    setShowCreateModal(false);
     setShowPlaylistModal(false);
-  }, 800);
-};
-
-const handleCreateAndAdd = () => {
-  if (!playlistName.trim() || !displayTrack) return;
-  createPlaylist(playlistName, playlistDesc);
-  setTimeout(() => {
-    const updated = usePlaylistStore.getState().playlists;
-    const newest = updated[updated.length - 1];
-    if (newest) addTrackToPlaylist(newest.id, displayTrack);
-  }, 50);
-  setPlaylistName("");
-  setPlaylistDesc("");
-  setShowCreateModal(false);
-  setShowPlaylistModal(false);
-};
+  };
 
   const displayTrack = playerTrack || lastPlayed;
   const isPlaying = playing && !!playerTrack;
@@ -101,13 +102,11 @@ const handleCreateAndAdd = () => {
             "the-weeknd",
           ]),
         ]);
-
         setArtists(artists);
       } catch (error) {
         console.error(error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -123,14 +122,15 @@ const handleCreateAndAdd = () => {
     <div className="w-full min-h-screen flex flex-col p-4 md:p-6 lg:p-8 gap-4 md:gap-6 lg:gap-8 pb-24 overflow-hidden">
       {/* Welcome Header */}
       <div>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-1">
+        <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-1 ${dm ? "text-white" : "text-gray-900"}`}>
           Welcome Back
         </h1>
-        <p className="text-xs md:text-sm lg:text-base opacity-60">
+        <p className={`text-xs md:text-sm lg:text-base ${dm ? "text-white/60" : "text-gray-500"}`}>
           Continue listening to your favorite music
         </p>
       </div>
 
+      {/* Last Played Banner */}
       {lastPlayed && (
         <div
           className="group w-full h-40 md:h-56 rounded-2xl overflow-hidden relative cursor-pointer shrink-0 hover:shadow-2xl transition-all duration-300"
@@ -192,18 +192,23 @@ const handleCreateAndAdd = () => {
         {/* Following Artists */}
         <div className="lg:col-span-2 flex flex-col gap-3 md:gap-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl md:text-3xl font-bold">Following</h2>
+            <h2 className={`text-2xl md:text-3xl font-bold ${dm ? "text-white" : "text-gray-900"}`}>
+              Following
+            </h2>
             {following.length > 0 && (
-              <button onClick={()=> navigate('/following')} className="text-green-500 hover:text-green-400 text-sm font-semibold flex items-center gap-1 transition-colors">
+              <button
+                onClick={() => navigate("/following")}
+                className="text-green-500 hover:text-green-400 text-sm font-semibold flex items-center gap-1 transition-colors"
+              >
                 View All <ArrowRight size={16} />
               </button>
             )}
           </div>
 
           {following.length === 0 ? (
-            <div className="w-full h-32 md:h-40 flex items-center justify-center rounded-xl border-2 border-dashed border-slate-600 bg-slate-800/50">
+            <div className={`w-full h-32 md:h-40 flex items-center justify-center rounded-xl border-2 border-dashed ${dm ? "border-slate-600 bg-slate-800/50" : "border-gray-300 bg-gray-100"}`}>
               <div className="text-center">
-                <p className="text-slate-400 text-xs md:text-sm mb-3">
+                <p className={`text-xs md:text-sm mb-3 ${dm ? "text-slate-400" : "text-gray-500"}`}>
                   No followed artists yet
                 </p>
                 <button
@@ -219,7 +224,11 @@ const handleCreateAndAdd = () => {
               {following.slice(0, 6).map((artist) => (
                 <div
                   key={artist.id}
-                  className="flex flex-col items-center gap-2 p-3 md:p-4 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 cursor-pointer transition-all duration-300 hover:shadow-lg group text-center"
+                  className={`flex flex-col items-center gap-2 p-3 md:p-4 rounded-xl border cursor-pointer transition-all duration-300 hover:shadow-lg group text-center ${
+                    dm
+                      ? "bg-slate-700/60 border-white/10 hover:bg-slate-600/60"
+                      : "bg-gray-100 border-gray-200 hover:bg-gray-200"
+                  }`}
                   onClick={() => navigate(`/user/${artist.id}`)}
                 >
                   <img
@@ -228,11 +237,11 @@ const handleCreateAndAdd = () => {
                     alt=""
                   />
                   <div className="min-w-0">
-                    <p className="font-semibold text-xs md:text-sm truncate">
+                    <p className={`font-semibold text-xs md:text-sm truncate ${dm ? "text-white" : "text-gray-900"}`}>
                       {artist.name}
                     </p>
                     {artist.follower_count && (
-                      <p className="text-xs opacity-60 truncate">
+                      <p className={`text-xs truncate ${dm ? "text-white/60" : "text-gray-500"}`}>
                         {(artist.follower_count / 1000).toFixed(1)}K
                       </p>
                     )}
@@ -244,8 +253,14 @@ const handleCreateAndAdd = () => {
         </div>
 
         {/* Now Playing Card */}
-        <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 md:p-6 flex flex-col gap-3 md:gap-4 shadow-xl  h-fit">
-          <h2 className="text-xl md:text-2xl font-bold">Now Playing</h2>
+        <div className={`rounded-2xl border p-4 md:p-6 flex flex-col gap-3 md:gap-4 shadow-lg h-fit ${
+          dm
+            ? "bg-slate-800/80 border-white/10"
+            : "bg-white border-gray-200"
+        }`}>
+          <h2 className={`text-xl md:text-2xl font-bold ${dm ? "text-white" : "text-gray-900"}`}>
+            Now Playing
+          </h2>
 
           {displayTrack ? (
             <>
@@ -255,10 +270,7 @@ const handleCreateAndAdd = () => {
                 onClick={() => navigate(`/discover/music/${displayTrack.id}`)}
               >
                 <img
-                  src={
-                    displayTrack.artwork?.["480x480"] ||
-                    displayTrack.artwork?.["150x150"]
-                  }
+                  src={displayTrack.artwork?.["480x480"] || displayTrack.artwork?.["150x150"]}
                   alt=""
                   className="w-full h-52 md:h-40 lg:h-48 rounded-xl object-cover group-hover:scale-110 transition-transform duration-300"
                 />
@@ -267,17 +279,17 @@ const handleCreateAndAdd = () => {
 
               {/* Track Info */}
               <div className="flex flex-col gap-1">
-                <p className="font-bold text-sm md:text-lg truncate">
+                <p className={`font-bold text-sm md:text-lg truncate ${dm ? "text-white" : "text-gray-900"}`}>
                   {displayTrack.title}
                 </p>
-                <p className="text-xs md:text-sm text-slate-300 truncate">
+                <p className={`text-xs md:text-sm truncate ${dm ? "text-slate-300" : "text-gray-500"}`}>
                   {displayTrack.user?.name}
                 </p>
               </div>
 
               {/* Progress Bar */}
               <div className="flex flex-col gap-2">
-                <div className="relative h-2 bg-slate-600 rounded-full overflow-hidden">
+                <div className={`relative h-2 rounded-full overflow-hidden ${dm ? "bg-slate-600" : "bg-gray-200"}`}>
                   <div
                     className="h-full bg-gradient-to-r from-green-500 to-emerald-600 transition-all"
                     style={{ width: `${progressPercent}%` }}
@@ -285,26 +297,18 @@ const handleCreateAndAdd = () => {
                   <input
                     type="range"
                     min={0}
-                    max={
-                      playerTrack?.id === displayTrack.id
-                        ? duration || 100
-                        : 100
-                    }
+                    max={playerTrack?.id === displayTrack.id ? duration || 100 : 100}
                     value={playerTrack?.id === displayTrack.id ? progress : 0}
                     onChange={(e) => seek(Number(e.target.value))}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                 </div>
-                <div className="flex justify-between text-xs text-slate-400">
+                <div className={`flex justify-between text-xs ${dm ? "text-slate-400" : "text-gray-400"}`}>
                   <span>
-                    {playerTrack?.id === displayTrack.id
-                      ? formatTime(progress)
-                      : "0:00"}
+                    {playerTrack?.id === displayTrack.id ? formatTime(progress) : "0:00"}
                   </span>
                   <span>
-                    {playerTrack?.id === displayTrack.id
-                      ? formatTime(duration)
-                      : "0:00"}
+                    {playerTrack?.id === displayTrack.id ? formatTime(duration) : "0:00"}
                   </span>
                 </div>
               </div>
@@ -319,12 +323,12 @@ const handleCreateAndAdd = () => {
                       play(displayTrack);
                     }
                   }}
-                  className="p-2 rounded-full hover:bg-slate-600 transition-colors cursor-pointer"
+                  className={`p-2 rounded-full transition-colors cursor-pointer ${dm ? "hover:bg-slate-600" : "hover:bg-gray-100"}`}
                   title="Restart"
                 >
-                  <RotateCcw className="size-6 md:size-7 text-gray-600" />
+                  <RotateCcw className={`size-6 md:size-7 ${dm ? "text-gray-500" : "text-gray-400"}`} />
                 </button>
-               
+
                 <button
                   onClick={handlePlayPause}
                   className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all cursor-pointer"
@@ -336,21 +340,20 @@ const handleCreateAndAdd = () => {
                   )}
                 </button>
 
-                
-               
-                <button onClick={() => setShowPlaylistModal(true)}
-                  className="p-2 rounded-full hover:bg-slate-600 transition-colors cursor-pointer"
+                <button
+                  onClick={() => setShowPlaylistModal(true)}
+                  className={`p-2 rounded-full transition-colors cursor-pointer ${dm ? "hover:bg-slate-600" : "hover:bg-gray-100"}`}
                 >
-                  <Plus className="size-6 md:size-7 text-gray-600 hover:text-white transition-colors" />
+                  <Plus className={`size-6 md:size-7 transition-colors ${dm ? "text-gray-500 hover:text-white" : "text-gray-400 hover:text-gray-700"}`} />
                 </button>
               </div>
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 py-6">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-600/50 flex items-center justify-center">
-                <Play className="size-6 md:size-7 text-slate-400" />
+              <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center ${dm ? "bg-slate-600/50" : "bg-gray-100"}`}>
+                <Play className={`size-6 md:size-7 ${dm ? "text-slate-400" : "text-gray-400"}`} />
               </div>
-              <p className="text-slate-400 text-xs md:text-sm text-center">
+              <p className={`text-xs md:text-sm text-center ${dm ? "text-slate-400" : "text-gray-400"}`}>
                 Play a track to see it here
               </p>
               <button
@@ -364,15 +367,24 @@ const handleCreateAndAdd = () => {
         </div>
       </div>
 
+      {/* Artists Section */}
       <div className="w-full p-1 flex flex-col gap-2">
         <div className="flex w-full justify-between items-center">
-          <h2 className="lg:text-4xl sm:2xl text-xl font-black">Artist</h2>
+          <h2 className={`lg:text-4xl sm:2xl text-xl font-black ${dm ? "text-white" : "text-gray-900"}`}>
+            Artist
+          </h2>
           <div className="flex gap-5 items-center pb-3">
-            <button onClick={leftArtist} className="cursor-pointer">
-              <ArrowLeft size={"30"} />
+            <button
+              onClick={leftArtist}
+              className={`cursor-pointer transition-colors ${dm ? "text-white hover:text-green-400" : "text-gray-600 hover:text-green-500"}`}
+            >
+              <ArrowLeft size={30} />
             </button>
-            <button onClick={rightArtist} className="cursor-pointer">
-              <ArrowRight size={"30"} />
+            <button
+              onClick={rightArtist}
+              className={`cursor-pointer transition-colors ${dm ? "text-white hover:text-green-400" : "text-gray-600 hover:text-green-500"}`}
+            >
+              <ArrowRight size={30} />
             </button>
           </div>
         </div>
@@ -387,31 +399,39 @@ const handleCreateAndAdd = () => {
           ))}
         </div>
       </div>
-      
-{/* Playlist Seçim Modalı */}
+
+      {/* Playlist Seçim Modalı */}
       {showPlaylistModal && (
         <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowPlaylistModal(false)}
         >
           <div
-            className="bg-[#1a1a2e] border border-white/10 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl"
+            className={`rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl border ${
+              dm
+                ? "bg-slate-900 border-white/10"
+                : "bg-white border-gray-200"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-5 pt-5 pb-3">
               <div>
-                <p className="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-1">
+                <p className={`text-[10px] font-semibold uppercase tracking-widest mb-1 ${dm ? "text-white/35" : "text-gray-400"}`}>
                   Add to Playlist
                 </p>
-                <p className="text-sm text-white/55">
-                  <span className="text-green-400 font-medium">
+                <p className={`text-sm ${dm ? "text-white/55" : "text-gray-600"}`}>
+                  <span className="text-green-500 font-medium">
                     "{displayTrack?.title}"
                   </span>
                 </p>
               </div>
               <button
                 onClick={() => setShowPlaylistModal(false)}
-                className="w-8 h-8 rounded-full bg-white/8 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/15 transition-colors"
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                  dm
+                    ? "bg-white/10 text-white/50 hover:text-white hover:bg-white/15"
+                    : "bg-gray-100 text-gray-400 hover:text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 <X size={15} />
               </button>
@@ -420,15 +440,19 @@ const handleCreateAndAdd = () => {
             <div className="max-h-60 overflow-y-auto px-2 pb-2">
               {playlists.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-8 text-center">
-                  <ListMusic className="size-10 text-white/15" />
-                  <p className="text-sm text-white/40">No playlists yet</p>
+                  <ListMusic className={`size-10 ${dm ? "text-white/15" : "text-gray-300"}`} />
+                  <p className={`text-sm ${dm ? "text-white/40" : "text-gray-400"}`}>
+                    No playlists yet
+                  </p>
                 </div>
               ) : (
                 playlists.map((pl) => (
                   <button
                     key={pl.id}
                     onClick={() => handleAddToPlaylist(pl.id)}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/7 transition-colors text-left"
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${
+                      dm ? "hover:bg-white/7" : "hover:bg-gray-100"
+                    }`}
                   >
                     <div className="size-9 rounded-lg bg-green-500/15 flex-shrink-0 overflow-hidden flex items-center justify-center">
                       {pl.tracks[0]?.artwork?.["150x150"] ? (
@@ -441,24 +465,32 @@ const handleCreateAndAdd = () => {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{pl.name}</p>
-                      <p className="text-xs text-white/35">{pl.tracks.length} songs</p>
+                      <p className={`text-sm font-medium truncate ${dm ? "text-white" : "text-gray-900"}`}>
+                        {pl.name}
+                      </p>
+                      <p className={`text-xs ${dm ? "text-white/35" : "text-gray-400"}`}>
+                        {pl.tracks.length} songs
+                      </p>
                     </div>
                     {addedId === pl.id && (
-                      <span className="text-green-400 text-sm font-bold">✓</span>
+                      <span className="text-green-500 text-sm font-bold">✓</span>
                     )}
                   </button>
                 ))
               )}
             </div>
 
-            <div className="border-t border-white/8 p-3">
+            <div className={`border-t p-3 ${dm ? "border-white/8" : "border-gray-200"}`}>
               <button
                 onClick={() => {
                   setShowPlaylistModal(false);
                   setShowCreateModal(true);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-green-500/12 hover:bg-green-500/22 transition-colors text-green-400 font-semibold text-sm"
+                className={`w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl transition-colors font-semibold text-sm ${
+                  dm
+                    ? "bg-green-500/12 hover:bg-green-500/22 text-green-400"
+                    : "bg-green-500/10 hover:bg-green-500/20 text-green-600"
+                }`}
               >
                 <Plus className="size-4" />
                 Create new playlist
@@ -471,25 +503,33 @@ const handleCreateAndAdd = () => {
       {/* Yeni Playlist Oluşturma Modalı */}
       {showCreateModal && (
         <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowCreateModal(false)}
         >
           <div
-            className="bg-slate-800 border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+            className={`rounded-2xl p-6 max-w-md w-full shadow-2xl border ${
+              dm
+                ? "bg-slate-800 border-white/10"
+                : "bg-white border-gray-200"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-white">Create New Playlist</h2>
+              <h2 className={`text-xl font-bold ${dm ? "text-white" : "text-gray-900"}`}>
+                Create New Playlist
+              </h2>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-white/50 hover:text-white transition-colors"
+                className={`transition-colors ${dm ? "text-white/50 hover:text-white" : "text-gray-400 hover:text-gray-700"}`}
               >
                 <X size={20} />
               </button>
             </div>
 
-            <p className="text-sm text-white/50 mb-4">
-              <span className="text-green-400 font-medium">"{displayTrack?.title}"</span>{" "}
+            <p className={`text-sm mb-4 ${dm ? "text-white/50" : "text-gray-500"}`}>
+              <span className={`font-medium ${dm ? "text-green-400" : "text-green-600"}`}>
+                "{displayTrack?.title}"
+              </span>{" "}
               will be added automatically.
             </p>
 
@@ -499,7 +539,11 @@ const handleCreateAndAdd = () => {
               value={playlistName}
               onChange={(e) => setPlaylistName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCreateAndAdd()}
-              className="w-full px-4 py-3 rounded-lg bg-slate-700 border border-slate-600 text-white mb-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 placeholder:text-slate-400"
+              className={`w-full px-4 py-3 rounded-lg border mb-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 ${
+                dm
+                  ? "bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                  : "bg-gray-100 border-gray-300 text-gray-900 placeholder:text-gray-400"
+              }`}
               autoFocus
             />
 
@@ -507,14 +551,22 @@ const handleCreateAndAdd = () => {
               placeholder="Description (optional)"
               value={playlistDesc}
               onChange={(e) => setPlaylistDesc(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-slate-700 border border-slate-600 text-white mb-4 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 placeholder:text-slate-400 resize-none"
+              className={`w-full px-4 py-3 rounded-lg border mb-4 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 resize-none ${
+                dm
+                  ? "bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                  : "bg-gray-100 border-gray-300 text-gray-900 placeholder:text-gray-400"
+              }`}
               rows={2}
             />
 
             <div className="flex gap-3">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-semibold transition-colors"
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-colors ${
+                  dm
+                    ? "bg-slate-700 hover:bg-slate-600 text-white"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
               >
                 Cancel
               </button>
