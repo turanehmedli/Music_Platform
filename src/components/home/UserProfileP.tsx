@@ -4,7 +4,7 @@ import type { AudiusUser } from "../../types/users";
 import type { Track } from "../../types/track";
 import { useFollowing } from "../../stores/useFollowing";
 import api from "../../api/axios";
-import { ArrowLeft, Music } from "lucide-react";
+import { ArrowLeft, Check, Music } from "lucide-react";
 import CartTrending from "./CartTrending";
 
 const UserProfileP = () => {
@@ -89,7 +89,7 @@ const UserProfileP = () => {
       </div>
 
       {/* Profile section */}
-      <div className="px-6 lg:px-16">
+      <div className="px-6 lg:px-16 ">
         {/* Avatar + follow row */}
         <div className="flex items-center justify-between mt-6  mb-4">
           <img
@@ -109,15 +109,21 @@ const UserProfileP = () => {
           </button>
         </div>
 
-        <div className="flex it text-sm mb-4ems-center gap-2 mb-1">
+        <div className="flex it text-sm mb-1 items-center gap-2 ">
           <h2 className="text-2xl font-black">{user.name}</h2>
           {user.is_verified && (
-            <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">
-              Verified
+            <span className="text-xs bg-blue-600 text-blue-100 size-5  items-center justify-center flex rounded-full font-medium">
+              <Check className="size-3 inline" /> 
             </span>
           )}
         </div>
         <p className="text-gray-400">@{user.handle}</p>
+
+        {user.bio && (
+          <p className="text-gray-600 text-sm max-w-xl mb-2 leading-relaxed">
+            {user.bio}
+          </p>
+        )}
 
         <div className="flex gap-8 mb-6">
           <div className="flex flex-col items-center">
@@ -142,11 +148,7 @@ const UserProfileP = () => {
           </div>
         </div>
 
-        {user.bio && (
-          <p className="text-gray-600 text-sm max-w-xl mb-8 leading-relaxed">
-            {user.bio}
-          </p>
-        )}
+        
 
         <div className="mb-10">
           <h2 className="text-xl font-black mb-4">Tracks</h2>
