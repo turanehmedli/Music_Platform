@@ -11,6 +11,7 @@ interface PlayerState {
   audio: HTMLAudioElement | null;
   queue: Track[];
   queueIndex: number;
+  volume: number; // 0–100
   setQueue: (tracks: Track[], startIndex?: number) => void;
   nextTrack: () => void;
   prevTrack: () => void;
@@ -20,6 +21,7 @@ interface PlayerState {
   setProgress: (t: number) => void;
   setDuration: (t: number) => void;
   setPlaying: (v: boolean) => void;
+  setVolume: (v: number) => void;
 }
 
 const buildAudio = (
@@ -37,6 +39,9 @@ const buildAudio = (
   }
 
   const audio = new Audio(`${BASE_URL}/tracks/${track.id}/stream`);
+
+  // Apply current volume immediately
+  audio.volume = get().volume / 100;
 
   let lastUpdate = 0;
   audio.ontimeupdate = () => {
@@ -76,6 +81,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   audio: null,
   queue: [],
   queueIndex: -1,
+  volume: 80,
 
   setQueue: (tracks, startIndex = 0) => {
     set({ queue: tracks, queueIndex: startIndex });
@@ -139,6 +145,15 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     if (!audio) return;
     audio.currentTime = time;
     set({ progress: time });
+  },
+
+  setVolume: (v: number) => {
+    const clamped = Math.max(0, Math.min(100, v));
+    const { audio } = get();
+    if (audio) {
+      audio.volume = clamped / 100;
+    }
+    set({ volume: clamped });
   },
 
   setProgress: (t) => set({ progress: t }),
