@@ -30,7 +30,7 @@ const MiniPlayer = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Click outside → close volume popup
+   
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (volumeRef.current && !volumeRef.current.contains(e.target as Node)) {

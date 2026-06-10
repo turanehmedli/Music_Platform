@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
 import { useTheme } from "../stores/themeStores";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 const Setting = () => {
   const { email, setEmail, setPassword, clearToken } = useAuthStore();
@@ -16,6 +16,7 @@ const Setting = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [emailMsg, setEmailMsg] = useState("");
+  const navigate = useNavigate();
   const [passMsg, setPassMsg] = useState("");
 
   const handleEmailChange = () => {
@@ -29,6 +30,7 @@ const Setting = () => {
     setEmailMsg("Email updated.");
     setTimeout(() => setEmailMsg(""), 3000);
   };
+
 
   const handlePasswordChange = () => {
     const storedPassword = useAuthStore.getState().password;
@@ -214,6 +216,7 @@ const Setting = () => {
         </div>
         <div className="rounded-b-xl border-x-1 border-b-1 border-gray-200 dark:border-gray-700/40 hover:border-gray-700/50 overflow-hidden">
           <button
+          onClick={() => navigate('/help')}
             className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-600/40 transition-colors"
           >
             
