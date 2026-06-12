@@ -205,7 +205,7 @@ const MusicDetailsContent = ({ id, onClose }: Props) => {
   const TrackInfo = () => (
     <div className="flex flex-col gap-1 flex-1">
       <h1 className="sm:text-lg text-md font-black">{track.title}</h1>
-      <div className="w-full gap-5 justify-between flex items-center mt-3">
+      <div className="w-full gap-5  flex items-center mt-3">
         <button
           className="text-gray-500 text-sm text-left hover:underline flex items-center gap-3"
           onClick={() => {

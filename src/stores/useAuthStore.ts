@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { AudiusUser } from "../types/users"; 
+import type { AudiusUser } from "../types/users";
 
 interface tokenAll {
   accessToken: string;
   refreshToken: string;
   hasHydrated: boolean;
   localAvatar: string;
+  localCover: string;
   user: AudiusUser | null;
 
   email: string;
@@ -17,7 +18,8 @@ interface tokenAll {
   setHasHydrated: (state: boolean) => void;
   setUser: (user: AudiusUser) => void;
   updateUser: (fields: Partial<AudiusUser>) => void;
-  updateAvatarProfile: (avatar:string) => void;
+  updateAvatarProfile: (avatar: string) => void;
+  updateCoverProfile: (cover: string) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   clearToken: () => void;
@@ -29,6 +31,7 @@ export const useAuthStore = create<tokenAll>()(
       accessToken: "",
       refreshToken: "",
       localAvatar: "",
+      localCover: "",
       hasHydrated: false,
       user: null,
       email: "",
@@ -37,7 +40,8 @@ export const useAuthStore = create<tokenAll>()(
       setAccessToken: (token) => set({ accessToken: token }),
       setRefreshToken: (token) => set({ refreshToken: token }),
       setHasHydrated: (state) => set({ hasHydrated: state }),
-      updateAvatarProfile: (avatar) =>set({localAvatar: avatar}),
+      updateAvatarProfile: (avatar) => set({ localAvatar: avatar }),
+      updateCoverProfile: (cover) => set({ localCover: cover }),
       setUser: (user) => set({ user }),
       updateUser: (fields) =>
         set((state) => ({
@@ -45,7 +49,8 @@ export const useAuthStore = create<tokenAll>()(
         })),
       setEmail: (email) => set({ email }),
       setPassword: (password) => set({ password }),
-      clearToken: () => set({ accessToken: "", refreshToken: "", user: null, email: "", password: "" }),
+      clearToken: () =>
+        set({ accessToken: "", refreshToken: "", user: null, email: "", password: "" }),
     }),
     {
       name: "auth",

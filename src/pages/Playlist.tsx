@@ -14,7 +14,6 @@ const Playlist = () => {
   const [playlistName, setPlaylistName] = useState("");
   const [playlistDesc, setPlaylistDesc] = useState("");
   const { isDarkModeOn } = useTheme();
-  const dm = isDarkModeOn;
 
   const handleCreatePlaylist = () => {
     if (playlistName.trim()) {
@@ -48,9 +47,12 @@ const Playlist = () => {
             {playlists.length} playlist{playlists.length !== 1 ? "s" : ""}
           </p>
         </div>
-        <button onClick={()=>{
-            setModal(true)
-        }} className="w-auto flex items-center justify-center gap-2 px-3 py-3 bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+        <button
+          onClick={() => {
+            setModal(true);
+          }}
+          className="w-auto flex items-center justify-center gap-2 px-3 py-3 bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
+        >
           <Plus size={20} />
           <span>New Playlist</span>
         </button>
@@ -64,13 +66,15 @@ const Playlist = () => {
         >
           <div
             className={`rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl border ${
-              dm
+              isDarkModeOn
                 ? "bg-slate-800 border-white/10"
                 : "bg-white border-gray-200"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className={`text-2xl font-bold mb-4 ${dm ? "text-white" : "text-gray-900"}`}>
+            <h2
+              className={`text-2xl font-bold mb-4 ${isDarkModeOn ? "text-white" : "text-gray-900"}`}
+            >
               Create New Playlist
             </h2>
 
@@ -81,7 +85,7 @@ const Playlist = () => {
               onChange={(e) => setPlaylistName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCreatePlaylist()}
               className={`w-full px-4 py-3 rounded-lg border mb-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 ${
-                dm
+                isDarkModeOn
                   ? "bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                   : "bg-gray-100 border-gray-300 text-gray-900 placeholder:text-gray-400"
               }`}
@@ -93,7 +97,7 @@ const Playlist = () => {
               value={playlistDesc}
               onChange={(e) => setPlaylistDesc(e.target.value)}
               className={`w-full px-4 py-3 rounded-lg border mb-4 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 resize-none ${
-                dm
+                isDarkModeOn
                   ? "bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                   : "bg-gray-100 border-gray-300 text-gray-900 placeholder:text-gray-400"
               }`}
@@ -104,7 +108,7 @@ const Playlist = () => {
               <button
                 onClick={() => setModal(false)}
                 className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  dm
+                  isDarkModeOn
                     ? "bg-slate-700 hover:bg-slate-600 text-white"
                     : "bg-gray-100 hover:bg-gray-200 text-gray-700"
                 }`}
@@ -130,10 +134,14 @@ const Playlist = () => {
             <Plus className="w-12 h-12 md:w-16 md:h-16 text-green-500" />
           </div>
           <div>
-            <h2 className={`text-2xl md:text-3xl font-bold mb-2 ${dm ? "text-white" : "text-gray-900"}`}>
+            <h2
+              className={`text-2xl md:text-3xl font-bold mb-2 ${isDarkModeOn ? "text-white" : "text-gray-900"}`}
+            >
               No Playlists Yet
             </h2>
-            <p className={`max-w-md mb-6 ${dm ? "text-white/60" : "text-gray-500"}`}>
+            <p
+              className={`max-w-md mb-6 ${isDarkModeOn ? "text-white/60" : "text-gray-500"}`}
+            >
               Create your first playlist to start organizing your favorite music
             </p>
             <button
@@ -152,7 +160,7 @@ const Playlist = () => {
               key={playlist.id}
               onClick={() => handleViewPlaylist(playlist.id)}
               className={`group rounded-xl overflow-hidden border hover:shadow-2xl transition-all duration-300 cursor-pointer ${
-                dm
+                isDarkModeOn
                   ? "bg-gradient-to-br from-slate-700 to-slate-800 border-white/5"
                   : "bg-white border-gray-200 hover:border-gray-300"
               }`}
@@ -167,7 +175,8 @@ const Playlist = () => {
                       className="rounded-lg bg-white"
                       style={{
                         backgroundImage: `url(${
-                          track.artwork?.["150x150"] || track.artwork?.["480x480"]
+                          track.artwork?.["150x150"] ||
+                          track.artwork?.["480x480"]
                         })`,
                         backgroundSize: "cover",
                       }}
@@ -176,7 +185,9 @@ const Playlist = () => {
                 </div>
 
                 {/* Gradient overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-t ${dm ? "from-slate-900" : "from-black/60"} via-transparent`} />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t ${isDarkModeOn ? "from-slate-900" : "from-black/60"} via-transparent`}
+                />
 
                 {/* Play button on hover */}
                 <button
@@ -186,7 +197,10 @@ const Playlist = () => {
                   }}
                   className="absolute bottom-3 md:bottom-4 right-3 md:right-4 w-10 h-10 md:w-12 md:h-12 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform opacity-0 group-hover:opacity-100"
                 >
-                  <Play size={20} className="text-white fill-white md:w-6 md:h-6" />
+                  <Play
+                    size={20}
+                    className="text-white fill-white md:w-6 md:h-6"
+                  />
                 </button>
 
                 {/* Playlist info at bottom */}
@@ -195,24 +209,27 @@ const Playlist = () => {
                     {playlist.name}
                   </h3>
                   <p className="text-xs text-white/70">
-                    {playlist.tracks.length} song{playlist.tracks.length !== 1 ? "s" : ""}
+                    {playlist.tracks.length} song
+                    {playlist.tracks.length !== 1 ? "s" : ""}
                   </p>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className={`p-3 md:p-4 flex gap-2 border-t ${
-                dm
-                  ? "bg-slate-800 border-slate-700"
-                  : "bg-gray-50 border-gray-200"
-              }`}>
+              <div
+                className={`p-3 md:p-4 flex gap-2 border-t ${
+                  isDarkModeOn
+                    ? "bg-slate-800 border-slate-700"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleViewPlaylist(playlist.id);
                   }}
                   className={`flex-1 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold transition-colors ${
-                    dm
+                    isDarkModeOn
                       ? "bg-slate-700 hover:bg-slate-600 text-white"
                       : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                   }`}
