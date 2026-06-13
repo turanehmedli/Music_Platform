@@ -52,7 +52,7 @@ const App = () => {
       <div
         className={`
           flex flex-col min-h-screen w-full ease-in-out duration-300
-          ${!isAuthPage && "xl:pl-[250px]"}
+          ${!isAuthPage && "xl:pl-[240px]"}
           ${isOpen ? "xl:pr-[380px]" : ""}
           ${isDarkModeOn ? "bg-slate-900 text-amber-50" : "bg-gray-100"}
           sm:pb-10 pb-15

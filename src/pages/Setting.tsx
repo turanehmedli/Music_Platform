@@ -66,9 +66,7 @@ const Setting = () => {
         </p>
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="flex items-center gap-3 px-5 py-4">
-            <div className="w-9 h-9 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-300">
-              🌙
-            </div>
+            
             <div className="flex-1">
               <p className="text-sm font-medium">Dark mode</p>
               <p className="text-xs text-gray-400">
@@ -107,9 +105,7 @@ const Setting = () => {
               }}
               className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-300/40 transition-colors"
             >
-              <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
-                ✉️
-              </div>
+              
               <div className="flex-1 text-left">
                 <p className="text-sm font-medium">Email address</p>
                 <p className="text-xs text-gray-400">{email || "Not yet set"}</p>
@@ -148,9 +144,7 @@ const Setting = () => {
               }}
               className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-300/40 transition-colors"
             >
-              <div className="w-9 h-9 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center text-teal-600 dark:text-teal-300">
-                🔒
-              </div>
+              
               <div className="flex-1 text-left">
                 <p className="text-sm font-medium">Password</p>
                 <p className="text-xs text-gray-400">Change your password</p>
@@ -203,15 +197,13 @@ const Setting = () => {
         <p className="text-xs uppercase tracking-widest text-gray-400 mb-2 px-1">
           Session
         </p>
-        <div className="rounded-t-xl border border-gray-200 dark:border-gray-700/40 overflow-hidden">
+        <div className="rounded-t-xl border-gray-200 dark:border-gray-700/40 hover:border-gray-700/50 border border-gray-200  overflow-hidden">
           <button
             onClick={clearToken}
-            className="w-full flex items-center gap-3 px-5 py-4 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-600/40   transition-colors"
           >
-            <div className="w-9 h-9 rounded-lg bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-500">
-              🚪
-            </div>
-            <p className="text-sm font-medium text-red-500">Log out</p>
+            
+            <p className="text-sm font-medium">Log out</p>
           </button>
         </div>
         <div className="rounded-b-xl border-x-1 border-b-1 border-gray-200 dark:border-gray-700/40 hover:border-gray-700/50 overflow-hidden">

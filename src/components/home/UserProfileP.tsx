@@ -67,7 +67,7 @@ const UserProfileP = () => {
   return (
     <div className="w-full min-h-screen flex flex-col">
       {/* Cover photo */}
-      <div className="relative w-full h-52 lg:h-72 overflow-hidden bg-gray-400 shrink-0">
+      <div className="relative w-full h-52 lg:h-62 overflow-hidden bg-gray-400 shrink-0">
         {user.cover_photo?.["2000x"] ? (
           <img
             className="w-full h-full object-cover"

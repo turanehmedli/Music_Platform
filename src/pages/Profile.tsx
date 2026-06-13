@@ -64,7 +64,7 @@ const Profile = () => {
   return (
     <div className="w-full min-h-screen flex flex-col">
       {/* Cover photo */}
-      <div className="relative w-full h-52 lg:h-72 overflow-hidden shrink-0">
+      <div className="relative w-full h-52 lg:h-62 overflow-hidden shrink-0">
         {localCover || user.cover_photo?.["2000x"] ? (
           <img
             className="w-full h-full object-cover"
@@ -184,6 +184,10 @@ const Profile = () => {
 
         {/* Stats */}
         <div className="flex gap-8 mb-6">
+          <div className="flex flex-col items-center">
+            <p className="font-bold text-lg">0</p>
+            <p className="text-gray-400 text-xs">Tracks</p>
+          </div>
           <div className="flex flex-col items-center">
             <p className="font-bold text-lg">{user.follower_count ?? 0}</p>
             <p className="text-gray-400 text-xs">Followers</p>
